@@ -26,6 +26,11 @@ namespace Apache.Ignite.Sybase.Ingest.Common
         {
             var fullPath = desc.GetInFilePath(dir);
 
+            if (!File.Exists(fullPath))
+            {
+                return (null, null);
+            }
+
             var fileStream = File.OpenRead(fullPath);
             var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);
             var reader = new BinaryRecordReader(desc, gzipStream);
