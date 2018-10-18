@@ -12,7 +12,7 @@ namespace Apache.Ignite.Sybase.Ingest
             // Ideally producer/consumer with back-pressure is required: load data from disk and parse, pass to Streamer.
             // For simplicity let's just have single-threaded method to load single table, then run in parallel for multiple tables.
 
-            ParseDdls();
+            ParseCtls();
         }
 
         private static void ParseDdls()
@@ -40,8 +40,33 @@ namespace Apache.Ignite.Sybase.Ingest
                 .Select(c => $"{c.SqlType}_{c.SqlTypeQualifier}")
                 .Distinct();
 
-            // TODO: CTL files contain exact positions of all fields.
-            // FIX NNN directives denote the line width
+            Console.WriteLine(string.Join("\n", dataTypes));
+        }
+
+        private static void ParseCtls()
+        {
+            var dir = Path.GetFullPath(@"..\..\data\load_script");
+            var ctlFiles = Directory.GetFiles(dir, "*.ctl");
+
+            Console.WriteLine($"Found {ctlFiles.Length} CTL files.");
+
+            var recordDescriptors = ctlFiles
+                .Select(CtlParser.ParseCtl)
+                .Where(t => t != null)
+                .ToArray();
+
+            foreach (var recordDescriptor in recordDescriptors)
+            {
+                Console.WriteLine(recordDescriptor);
+            }
+
+            Console.WriteLine("\nDistinct SQL data types:");
+
+            var dataTypes = recordDescriptors
+                .SelectMany(t => t.Fields)
+                .Select(c => c.TypeName ?? "STRING")
+                .Distinct();
+
             Console.WriteLine(string.Join("\n", dataTypes));
         }
     }
