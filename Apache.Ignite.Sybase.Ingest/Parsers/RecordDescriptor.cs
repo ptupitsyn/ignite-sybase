@@ -5,7 +5,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class RecordDescriptor
     {
-        public RecordDescriptor(int length, IReadOnlyCollection<RecordField> fields, string inFile, string tableName)
+        public RecordDescriptor(int length, IReadOnlyList<RecordField> fields, string inFile, string tableName)
         {
             Length = Arg.InRange(length, 1, int.MaxValue, nameof(length));
             Fields = Arg.NotNullOrEmpty(fields, nameof(fields));
@@ -19,7 +19,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
 
         public string TableName { get; }
 
-        public IReadOnlyCollection<RecordField> Fields { get; }
+        public IReadOnlyList<RecordField> Fields { get; }
 
         public override string ToString()
         {

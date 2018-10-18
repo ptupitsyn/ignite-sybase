@@ -43,7 +43,7 @@ namespace Apache.Ignite.Sybase.Ingest.Common
         }
 
         [NotNull]
-        public static IReadOnlyCollection<T> NotNullOrEmpty<T>(IReadOnlyCollection<T> arg, [InvokerParameterName] string argName)
+        public static IReadOnlyList<T> NotNullOrEmpty<T>(IReadOnlyList<T> arg, [InvokerParameterName] string argName)
         {
             NotNull(arg, argName);
 
