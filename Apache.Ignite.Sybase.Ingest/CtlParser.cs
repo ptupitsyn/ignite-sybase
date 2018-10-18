@@ -23,7 +23,8 @@ namespace Apache.Ignite.Sybase.Ingest
             {
                 if (line.StartsWith(TokenInfile, StringComparison.Ordinal))
                 {
-                    var parts = line.Split(new[] {"'", "\""}, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = line.Split(new[] {"'", "\""}, StringSplitOptions.RemoveEmptyEntries)
+                        .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
                     if (parts.Length != 3)
                     {
@@ -32,6 +33,8 @@ namespace Apache.Ignite.Sybase.Ingest
 
                     inFile = parts[1];
                     length = int.Parse(parts[2].Split(" ")[1]);
+
+                    continue;
                 }
 
                 if (line.StartsWith(TokenIntoTable, StringComparison.InvariantCultureIgnoreCase))
@@ -40,6 +43,8 @@ namespace Apache.Ignite.Sybase.Ingest
                         .Substring(TokenInfile.Length)
                         .Split(" ", StringSplitOptions.RemoveEmptyEntries)
                         .First();
+
+                    continue;
                 }
 
                 // Fields section is last.
