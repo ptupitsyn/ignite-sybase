@@ -75,17 +75,17 @@ namespace Apache.Ignite.Sybase.Ingest
 
                 using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
                 {
-                    // Read top 3 records for demo.
                     while (true)
                     {
-                        var rec = reader.ReadAsBinaryObject(cacheName, binary);
+                        var builder = reader.ReadAsBinaryObject(cacheName, binary);
 
-                        if (rec == null)
+                        if (builder == null)
                         {
                             break;
                         }
 
-                        streamer.AddData(key++, rec.Build());
+                        var binaryObject = builder.Build();
+                        streamer.AddData(key++, binaryObject);
                     }
                 }
             }
