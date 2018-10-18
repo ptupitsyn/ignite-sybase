@@ -1,8 +1,7 @@
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using Apache.Ignite.Sybase.Ingest.Loaders;
+using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest
@@ -61,23 +60,16 @@ namespace Apache.Ignite.Sybase.Ingest
 
             foreach (var recordDescriptor in recordDescriptors)
             {
-                var fileName = recordDescriptor.InFile.Split(
-                        new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
-                        StringSplitOptions.RemoveEmptyEntries)
-                    .Last();
+                var (reader, fullPath) = recordDescriptor.GetInFileStream(dir);
 
-                var fullPath = Path.Combine(dir, fileName + ".gz");
-
-                if (!File.Exists(fullPath))
+                if (reader == null)
                 {
                     continue;
                 }
 
                 Console.WriteLine(fullPath);
 
-                using (var fileStream = File.OpenRead(fullPath))
-                using (var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress))
-                using (var reader = new BinaryRecordReader(recordDescriptor, gzipStream))
+                using (reader)
                 {
                     // Read top 3 records for demo.
                     for (var i = 0; i < 3; i++)
@@ -102,7 +94,7 @@ namespace Apache.Ignite.Sybase.Ingest
             }
         }
 
-        private static RecordDescriptor[] GetRecordDescriptors(string dir)
+        public static RecordDescriptor[] GetRecordDescriptors(string dir)
         {
             var ctlFiles = Directory.GetFiles(Path.Combine(dir, "load_script"), "*.ctl");
 

@@ -19,7 +19,7 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
             _buffer = new byte[_recordDescriptor.Length];
         }
 
-        public unsafe object[] Read()
+        public object[] Read()
         {
             if (!_stream.CanRead)
             {

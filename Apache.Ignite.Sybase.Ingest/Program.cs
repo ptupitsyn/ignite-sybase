@@ -1,5 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using Apache.Ignite.Core;
+using Apache.Ignite.Core.Binary;
+using Apache.Ignite.Core.Cache;
+using Apache.Ignite.Core.Discovery.Tcp;
+using Apache.Ignite.Core.Discovery.Tcp.Static;
+using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
@@ -18,7 +25,43 @@ namespace Apache.Ignite.Sybase.Ingest
 
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
-            Tests.TestReadAllData(dir);
+            // Tests.TestReadAllData(dir);
+            LoadIgnite(dir);
+        }
+
+        private static void LoadIgnite(string dir)
+        {
+            var cfg = new IgniteConfiguration
+            {
+                DiscoverySpi = new TcpDiscoverySpi
+                {
+                    IpFinder = new TcpDiscoveryStaticIpFinder
+                    {
+                        Endpoints = new[] {"127.0.0.1:47500"}
+                    },
+                    SocketTimeout = TimeSpan.FromSeconds(0.3)
+                }
+            };
+
+            var recordDescriptors = Tests.GetRecordDescriptors(dir);
+
+            using (var ignite = Ignition.Start(cfg))
+            {
+                foreach (var desc in recordDescriptors)
+                {
+                    // TODO: How do we determine primary key?
+                    var cacheName = desc.TableName;
+                    var cache = ignite.GetOrCreateCache<int, object>(cacheName);
+                    var binCache = cache.WithKeepBinary<int, IBinaryObject>();
+
+                    LoadCache(binCache, desc);
+                }
+            }
+        }
+
+        private static void LoadCache(ICache<int, IBinaryObject> binCache, RecordDescriptor desc)
+        {
+
         }
     }
 }
