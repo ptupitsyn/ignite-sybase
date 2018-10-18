@@ -43,10 +43,9 @@ namespace Apache.Ignite.Sybase.Ingest
                 }
             };
 
-            var recordDescriptors = Tests.GetRecordDescriptors(dir);
-
             using (var ignite = Ignition.Start(cfg))
             {
+                var recordDescriptors = Tests.GetRecordDescriptors(dir);
                 foreach (var desc in recordDescriptors)
                 {
                     LoadCache(ignite, desc, dir);
@@ -64,29 +63,31 @@ namespace Apache.Ignite.Sybase.Ingest
                 return;
             }
 
-            var cacheName = desc.TableName;
-            var cache = ignite.GetOrCreateCache<long, object>(cacheName);
-            var binCache = cache.WithKeepBinary<long, IBinaryObject>();
-            var binary = ignite.GetBinary();
-
-            Console.WriteLine(fullPath);
-
-            // TODO: How do we determine proper primary key?
-            long key = 0;
-
             using (reader)
             {
-                // Read top 3 records for demo.
-                while (true)
+                var cacheName = desc.TableName;
+                ignite.GetOrCreateCache<long, object>(cacheName);
+                var binary = ignite.GetBinary();
+
+                Console.WriteLine(fullPath);
+
+                // TODO: How do we determine proper primary key?
+                long key = 0;
+
+                using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
                 {
-                    var rec = reader.ReadAsBinaryObject(cacheName, binary);
-
-                    if (rec == null)
+                    // Read top 3 records for demo.
+                    while (true)
                     {
-                        break;
-                    }
+                        var rec = reader.ReadAsBinaryObject(cacheName, binary);
 
-                    binCache[key++] = rec.Build();
+                        if (rec == null)
+                        {
+                            break;
+                        }
+
+                        streamer.AddData(key++, rec.Build());
+                    }
                 }
             }
         }
