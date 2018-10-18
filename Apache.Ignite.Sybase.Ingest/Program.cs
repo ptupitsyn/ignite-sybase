@@ -25,7 +25,15 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
             // Tests.TestReadAllData(dir);
-            LoadIgnite(dir);
+            try
+            {
+                LoadIgnite(dir);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static void LoadIgnite(string dir)
@@ -88,6 +96,7 @@ namespace Apache.Ignite.Sybase.Ingest
                         }
 
                         var binaryObject = builder.Build();
+                        Console.WriteLine(binaryObject);
                         streamer.AddData(key++, binaryObject);
                     }
                 }
