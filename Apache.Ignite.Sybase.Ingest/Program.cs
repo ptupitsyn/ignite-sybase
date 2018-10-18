@@ -7,7 +7,7 @@ namespace Apache.Ignite.Sybase.Ingest
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // TODO: We should saturate CPU, Network, and Disk for best perf.
             // Ideally producer/consumer with back-pressure is required: load data from disk and parse, pass to Streamer.
@@ -18,13 +18,14 @@ namespace Apache.Ignite.Sybase.Ingest
             // INTEGER(8)
             // DOUBLE
 
-            ParseCtls();
+            var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
+
+            ParseCtls(dir);
         }
 
-        private static void ParseDdls()
+        private static void ParseDdls(string dir)
         {
-            var dir = Path.GetFullPath(@"..\..\data\ddl");
-            var ddlFiles = Directory.GetFiles(dir);
+            var ddlFiles = Directory.GetFiles(Path.Combine(dir, "ddl"));
 
             Console.WriteLine($"Found {ddlFiles.Length} DDL files.");
 
@@ -49,10 +50,9 @@ namespace Apache.Ignite.Sybase.Ingest
             Console.WriteLine(string.Join("\n", dataTypes));
         }
 
-        private static void ParseCtls()
+        private static void ParseCtls(string dir)
         {
-            var dir = Path.GetFullPath(@"..\..\data\load_script");
-            var ctlFiles = Directory.GetFiles(dir, "*.ctl");
+            var ctlFiles = Directory.GetFiles(Path.Combine(dir, "load_script"), "*.ctl");
 
             Console.WriteLine($"Found {ctlFiles.Length} CTL files.");
 

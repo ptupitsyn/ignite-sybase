@@ -8,7 +8,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
         public RecordField(string name, string typeName, int position, int length)
         {
             Name = Arg.NotNullOrWhitespace(name, nameof(name));
-            TypeName = Arg.NotNullOrWhitespace(typeName, nameof(typeName));
+            TypeName = typeName;
             Position = Arg.InRange(position, 0, int.MaxValue, nameof(position));
             Length = Arg.InRange(length, 1, int.MaxValue, nameof(length));
 
