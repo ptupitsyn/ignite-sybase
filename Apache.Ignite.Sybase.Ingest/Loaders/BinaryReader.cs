@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
@@ -68,6 +67,8 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            return result;
         }
 
         public void Dispose()
