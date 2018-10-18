@@ -9,6 +9,7 @@ namespace Apache.Ignite.Sybase.Ingest
     {
         private const string TokenIntoTable = "Into table";
         private const string TokenInfile = "INFILE";
+        private const string TokenPosition = "position(";
 
         public static RecordDescriptor ParseCtl(string path)
         {
@@ -57,13 +58,23 @@ namespace Apache.Ignite.Sybase.Ingest
         {
             var parts = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            if (parts.Length < 2)
+            if (parts.Length < 2 || !parts[1].StartsWith(TokenPosition))
             {
                 throw new Exception("Failed to parse field: " + line);
             }
 
-            var field = new RecordField(null, 0, null);
-            return field;
+            var posParts = parts[1].Split(new[] {"(", ":"}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (posParts.Length != 3)
+            {
+                throw new Exception("Failed to parse field: " + line);
+            }
+
+            return new RecordField(
+                parts[0],
+                parts.Length > 2 ? parts[2] : null,
+                int.Parse(posParts[1]),
+                int.Parse(posParts[2]));
         }
     }
 
@@ -88,18 +99,21 @@ namespace Apache.Ignite.Sybase.Ingest
 
     public class RecordField
     {
-        public RecordField(string name, int length, string typeName)
+        public RecordField(string name, string typeName, int position, int length)
         {
             Name = name;
-            Length = length;
             TypeName = typeName;
+            Position = position;
+            Length = length;
         }
 
         public string Name { get; }
 
-        public int Length { get; }
-
         public string TypeName { get; }
+
+        public int Position { get; }
+
+        public int Length { get; }
     }
 
     public enum RecordFieldType
