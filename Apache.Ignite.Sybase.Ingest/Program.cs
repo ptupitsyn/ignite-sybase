@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Apache.Ignite.Core;
-using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.Sybase.Ingest.Common;
