@@ -40,12 +40,30 @@ namespace Apache.Ignite.Sybase.Ingest
                         .Split(" ", StringSplitOptions.RemoveEmptyEntries)
                         .First();
                 }
-            }
 
+                // Fields section is last.
+                if (!string.IsNullOrEmpty(tableName) && line.Length > 2)
+                {
+                    fields.Add(ParseField(line));
+                }
+            }
 
             return fields.Any() && length > 0
                 ? new RecordDescriptor(length, fields, inFile, tableName)
                 : null;
+        }
+
+        private static RecordField ParseField(string line)
+        {
+            var parts = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length < 2)
+            {
+                throw new Exception("Failed to parse field: " + line);
+            }
+
+            var field = new RecordField(null, 0, null);
+            return field;
         }
     }
 
@@ -70,6 +88,15 @@ namespace Apache.Ignite.Sybase.Ingest
 
     public class RecordField
     {
+        public RecordField(string name, int length, string typeName)
+        {
+            Name = name;
+            Length = length;
+            TypeName = typeName;
+        }
+
+        public string Name { get; }
+
         public int Length { get; }
 
         public string TypeName { get; }
