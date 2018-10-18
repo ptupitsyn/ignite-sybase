@@ -107,9 +107,7 @@ namespace Apache.Ignite.Sybase.Ingest
             }
 
             var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-            var fileSize = new FileInfo(fullPath).Length;
-            var mbps = fileSize / sw.ElapsedMilliseconds / 1000;
-            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {itemsPerSecond} items/sec, {mbps} MB/sec");
+            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
         }
     }
 }
