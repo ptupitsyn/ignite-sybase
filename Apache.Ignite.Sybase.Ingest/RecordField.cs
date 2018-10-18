@@ -1,3 +1,5 @@
+using System;
+
 namespace Apache.Ignite.Sybase.Ingest
 {
     public class RecordField
@@ -8,11 +10,28 @@ namespace Apache.Ignite.Sybase.Ingest
             TypeName = typeName;
             Position = position;
             Length = length;
+
+            switch (typeName)
+            {
+                case null:
+                    Type = RecordFieldType.String;
+                    break;
+                case "INTEGER(8)":
+                    Type = RecordFieldType.Long;
+                    break;
+                case "DOUBLE":
+                    Type = RecordFieldType.Double;
+                    break;
+                default:
+                    throw new Exception("Unexpected field type: " + typeName);
+            }
         }
 
         public string Name { get; }
 
         public string TypeName { get; }
+
+        public RecordFieldType Type { get; }
 
         public int Position { get; }
 

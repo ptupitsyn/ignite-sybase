@@ -64,7 +64,7 @@ namespace Apache.Ignite.Sybase.Ingest
 
             var dataTypes = recordDescriptors
                 .SelectMany(t => t.Fields)
-                .Select(c => c.TypeName ?? "STRING")
+                .Select(c => c.Type)
                 .Distinct();
 
             Console.WriteLine(string.Join("\n", dataTypes));
