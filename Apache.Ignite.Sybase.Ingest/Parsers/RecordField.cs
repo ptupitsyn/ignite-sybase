@@ -1,15 +1,16 @@
 using System;
+using Apache.Ignite.Sybase.Ingest.Common;
 
-namespace Apache.Ignite.Sybase.Ingest
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class RecordField
     {
         public RecordField(string name, string typeName, int position, int length)
         {
-            Name = name;
-            TypeName = typeName;
-            Position = position;
-            Length = length;
+            Name = Arg.NotNullOrWhitespace(name, nameof(name));
+            TypeName = Arg.NotNullOrWhitespace(typeName, nameof(typeName));
+            Position = Arg.InRange(position, 0, int.MaxValue, nameof(position));
+            Length = Arg.InRange(length, 1, int.MaxValue, nameof(length));
 
             switch (typeName)
             {

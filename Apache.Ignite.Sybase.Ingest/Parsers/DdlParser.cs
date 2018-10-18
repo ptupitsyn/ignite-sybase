@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Apache.Ignite.Sybase.Ingest
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public static class DdlParser
     {

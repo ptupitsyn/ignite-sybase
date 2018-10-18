@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using Apache.Ignite.Sybase.Ingest.Common;
 
-namespace Apache.Ignite.Sybase.Ingest
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class RecordDescriptor
     {
         public RecordDescriptor(int length, IReadOnlyCollection<RecordField> fields, string inFile, string tableName)
         {
-            Length = length;
-            Fields = fields;
-            InFile = inFile;
-            TableName = tableName;
+            Length = Arg.InRange(length, 1, int.MaxValue, nameof(length));
+            Fields = Arg.NotNullOrEmpty(fields, nameof(fields));
+            InFile = Arg.NotNullOrWhitespace(inFile, nameof(inFile));
+            TableName = Arg.NotNullOrWhitespace(tableName, nameof(tableName));
         }
 
         public int Length { get; }

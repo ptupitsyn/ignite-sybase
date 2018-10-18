@@ -1,4 +1,4 @@
-﻿namespace Apache.Ignite.Sybase.Ingest
+﻿namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class ColumnDefinition
     {

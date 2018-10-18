@@ -1,4 +1,4 @@
-namespace Apache.Ignite.Sybase.Ingest
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     /// <summary>
     /// Actual data only uses 3 types:

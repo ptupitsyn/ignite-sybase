@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Apache.Ignite.Sybase.Ingest
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public static class CtlParser
     {
