@@ -6,13 +6,13 @@ using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest.Loaders
 {
-    public class BinaryReader : IDisposable
+    public class BinaryRecordReader : IDisposable
     {
         private readonly RecordDescriptor _recordDescriptor;
-        private readonly FileStream _stream;
+        private readonly Stream _stream;
         private readonly byte[] _buffer;
 
-        public BinaryReader(RecordDescriptor recordDescriptor, FileStream stream)
+        public BinaryRecordReader(RecordDescriptor recordDescriptor, Stream stream)
         {
             _recordDescriptor = Arg.NotNull(recordDescriptor, nameof(recordDescriptor));
             _stream = Arg.NotNull(stream, nameof(stream));

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Apache.Ignite.Sybase.Ingest.Loaders;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest
@@ -88,6 +91,31 @@ namespace Apache.Ignite.Sybase.Ingest
                 }
 
                 Console.WriteLine(fullPath);
+
+                using (var fileStream = File.OpenRead(fullPath))
+                using (var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress))
+                using (var reader = new BinaryRecordReader(recordDescriptor, gzipStream))
+                {
+                    // Read top 3 records for demo.
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var rec = reader.Read();
+
+                        if (rec == null)
+                        {
+                            break;
+                        }
+
+                        for (var index = 0; index < recordDescriptor.Fields.Count; index++)
+                        {
+                            var field = recordDescriptor.Fields[index];
+                            var val = rec[index];
+                            Console.Write($"{field}: {val}");
+                        }
+
+                        Console.WriteLine();
+                    }
+                }
             }
         }
 
