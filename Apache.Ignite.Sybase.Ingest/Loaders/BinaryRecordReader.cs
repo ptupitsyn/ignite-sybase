@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
@@ -40,6 +41,31 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
             {
                 var field = _recordDescriptor.Fields[index];
                 result[index] = ReadField(field);
+            }
+
+            return result;
+        }
+
+        public IBinaryObjectBuilder ReadAsBinaryObject(string typeName, IBinary binary)
+        {
+            if (!_stream.CanRead)
+            {
+                return null;
+            }
+
+            var read = _stream.Read(_buffer, 0, _buffer.Length);
+
+            if (read < _buffer.Length)
+            {
+                // EOF
+                return null;
+            }
+
+            var result = binary.GetBuilder(typeName);
+
+            for (var index = 0; index < _recordDescriptor.Fields.Count; index++)
+            {
+                var field = _recordDescriptor.Fields[index];
             }
 
             return result;

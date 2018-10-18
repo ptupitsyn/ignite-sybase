@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Binary;
-using Apache.Ignite.Core.Cache;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
+using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest
@@ -49,19 +49,46 @@ namespace Apache.Ignite.Sybase.Ingest
             {
                 foreach (var desc in recordDescriptors)
                 {
-                    // TODO: How do we determine primary key?
-                    var cacheName = desc.TableName;
-                    var cache = ignite.GetOrCreateCache<int, object>(cacheName);
-                    var binCache = cache.WithKeepBinary<int, IBinaryObject>();
-
-                    LoadCache(binCache, desc);
+                    LoadCache(ignite, desc, dir);
                 }
             }
         }
 
-        private static void LoadCache(ICache<int, IBinaryObject> binCache, RecordDescriptor desc)
+        private static void LoadCache(IIgnite ignite, RecordDescriptor desc, string dir)
         {
+            var (reader, fullPath) = desc.GetInFileStream(dir);
 
+            if (reader == null)
+            {
+                // File does not exist.
+                return;
+            }
+
+            var cacheName = desc.TableName;
+            var cache = ignite.GetOrCreateCache<long, object>(cacheName);
+            var binCache = cache.WithKeepBinary<long, IBinaryObject>();
+            var binary = ignite.GetBinary();
+
+            Console.WriteLine(fullPath);
+
+            // TODO: How do we determine proper primary key?
+            long key = 0;
+
+            using (reader)
+            {
+                // Read top 3 records for demo.
+                while (true)
+                {
+                    var rec = reader.ReadAsBinaryObject(cacheName, binary);
+
+                    if (rec == null)
+                    {
+                        break;
+                    }
+
+                    binCache[key++] = rec.Build();
+                }
+            }
         }
     }
 }
