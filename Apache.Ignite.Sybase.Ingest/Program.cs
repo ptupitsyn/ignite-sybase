@@ -8,6 +8,7 @@ using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
+using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
@@ -47,13 +48,21 @@ namespace Apache.Ignite.Sybase.Ingest
 
             };
 
-            using (var ignite = Ignition.Start(cfg))
-            {
-                var recordDescriptors = Tests.GetRecordDescriptors(dir);
+            var ignite = Ignition.Start(cfg);
+            var recordDescriptors = Tests.GetRecordDescriptors(dir);
 
-                // ReSharper disable once AccessToDisposedClosure
-                Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));
-            }
+            var sw = Stopwatch.StartNew();
+            Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));
+            var elapsed = sw.Elapsed;
+
+            var cacheNames = ignite.GetCacheNames();
+            var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
+
+            Console.WriteLine("\n==========================");
+            Console.WriteLine("Loading complete:");
+            Console.WriteLine($" * {cacheNames.Count} caches");
+            Console.WriteLine($" * {totalItems} cache entries");
+            Console.WriteLine($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
         }
 
         private static void LoadCache(IIgnite ignite, RecordDescriptor desc, string dir)
