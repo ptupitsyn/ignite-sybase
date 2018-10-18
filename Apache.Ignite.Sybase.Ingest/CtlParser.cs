@@ -68,16 +68,16 @@ namespace Apache.Ignite.Sybase.Ingest
                 throw new Exception("Failed to parse field: " + line);
             }
 
-            var posParts = parts[1].Split(new[] {"(", ":"}, StringSplitOptions.RemoveEmptyEntries);
+            var posParts = parts[1].Split(new[] {"(", ":", ")"}, StringSplitOptions.RemoveEmptyEntries);
 
-            if (posParts.Length != 3)
+            if (posParts.Length < 3)
             {
                 throw new Exception("Failed to parse field: " + line);
             }
 
             return new RecordField(
                 parts[0],
-                parts.Length > 2 ? parts[2] : null,
+                parts.Length > 2 ? parts[2].Trim(',') : null,
                 int.Parse(posParts[1]),
                 int.Parse(posParts[2]));
         }
