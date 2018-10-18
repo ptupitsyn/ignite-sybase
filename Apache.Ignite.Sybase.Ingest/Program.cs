@@ -27,15 +27,7 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
             // Tests.TestReadAllData(dir);
-            try
-            {
-                LoadIgnite(dir);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            LoadIgnite(dir);
         }
 
         private static void LoadIgnite(string dir)
@@ -78,14 +70,12 @@ namespace Apache.Ignite.Sybase.Ingest
                 return;
             }
 
+            Console.WriteLine(fullPath);
+
             using (reader)
             {
                 ignite.GetOrCreateCache<long, object>(cacheName);
                 var binary = ignite.GetBinary();
-
-                Console.WriteLine(fullPath);
-
-                // TODO: How do we determine proper primary key?
 
                 using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
                 {
@@ -99,9 +89,9 @@ namespace Apache.Ignite.Sybase.Ingest
                         }
 
                         var binaryObject = builder.Build();
-                        // Console.WriteLine(binaryObject);
+
+                        // TODO: How do we determine proper primary key?
                         streamer.AddData(key++, binaryObject);
-                        // streamer.Flush();
                     }
                 }
             }
