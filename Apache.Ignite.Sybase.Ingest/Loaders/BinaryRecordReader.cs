@@ -63,9 +63,9 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
 
             var result = binary.GetBuilder(typeName);
 
-            for (var index = 0; index < _recordDescriptor.Fields.Count; index++)
+            foreach (var field in _recordDescriptor.Fields)
             {
-                var field = _recordDescriptor.Fields[index];
+                ReadField(result, field);
             }
 
             return result;
@@ -97,6 +97,41 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
 
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private unsafe void ReadField(IBinaryObjectBuilder builder, RecordField field)
+        {
+            var pos = field.StartPos - 1;
+            var len = field.EndPos - pos;
+
+            switch (field.Type)
+            {
+                case RecordFieldType.String:
+                {
+                    // All strings are ASCII, see .dat.sql files.
+                    // Strings are padded with spaces (because fixed length).
+                    var val = Encoding.ASCII.GetString(_buffer, pos, len).TrimEnd();
+                    builder.SetStringField(field.Name, val);
+                    break;
+                }
+
+                case RecordFieldType.Long:
+                    fixed (byte* p = &_buffer[pos])
+                    {
+                        builder.SetLongField(field.Name, *(long*) p);
+                        break;
+                    }
+
+                case RecordFieldType.Double:
+                    fixed (byte* p = &_buffer[pos])
+                    {
+                        builder.SetDoubleField(field.Name, *(double*) p);
+                        break;
+                    }
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(field.Type), field.Type, "Invalid field type");
             }
         }
 
