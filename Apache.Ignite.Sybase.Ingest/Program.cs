@@ -39,7 +39,10 @@ namespace Apache.Ignite.Sybase.Ingest
                         Endpoints = new[] {"127.0.0.1:47500"}
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
-                }
+                },
+                JvmInitialMemoryMb = 4086,
+                JvmMaxMemoryMb = 9000
+
             };
 
             using (var ignite = Ignition.Start(cfg))
