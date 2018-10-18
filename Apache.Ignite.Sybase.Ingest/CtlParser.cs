@@ -95,6 +95,11 @@ namespace Apache.Ignite.Sybase.Ingest
         public string TableName { get; }
 
         public IReadOnlyCollection<RecordField> Fields { get; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Length)}: {Length}, {nameof(InFile)}: {InFile}, {nameof(TableName)}: {TableName}";
+        }
     }
 
     public class RecordField
@@ -114,6 +119,11 @@ namespace Apache.Ignite.Sybase.Ingest
         public int Position { get; }
 
         public int Length { get; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Name)}: {Name}, {nameof(TypeName)}: {TypeName}, {nameof(Position)}: {Position}, {nameof(Length)}: {Length}";
+        }
     }
 
     public enum RecordFieldType
