@@ -110,7 +110,7 @@ namespace Apache.Ignite.Sybase.Ingest
                         {
                             var field = recordDescriptor.Fields[index];
                             var val = rec[index];
-                            Console.Write($"{field}: {val}");
+                            Console.Write($"{field.Name}: {val}; ");
                         }
 
                         Console.WriteLine();

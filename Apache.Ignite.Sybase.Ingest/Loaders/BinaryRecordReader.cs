@@ -39,14 +39,15 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
             for (var index = 0; index < _recordDescriptor.Fields.Count; index++)
             {
                 var field = _recordDescriptor.Fields[index];
-                var pos = field.Position - 1;
-                var len = field.Length;
+                var pos = field.StartPos - 1;
+                var len = field.EndPos - pos;
 
                 switch (field.Type)
                 {
                     case RecordFieldType.String:
                         // All strings are ASCII, see .dat.sql files.
-                        result[index] = Encoding.ASCII.GetString(_buffer, pos, len);
+                        // Strings are padded with spaces (because fixed length).
+                        result[index] = Encoding.ASCII.GetString(_buffer, pos, len).TrimEnd();
                         break;
 
                     case RecordFieldType.Long:

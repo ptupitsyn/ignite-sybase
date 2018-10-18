@@ -5,12 +5,12 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class RecordField
     {
-        public RecordField(string name, string typeName, int position, int length)
+        public RecordField(string name, string typeName, int startPos, int endPos)
         {
             Name = Arg.NotNullOrWhitespace(name, nameof(name));
             TypeName = typeName;
-            Position = Arg.InRange(position, 0, int.MaxValue, nameof(position));
-            Length = Arg.InRange(length, 1, int.MaxValue, nameof(length));
+            StartPos = Arg.InRange(startPos, 0, int.MaxValue, nameof(startPos));
+            EndPos = Arg.InRange(endPos, startPos + 1, int.MaxValue, nameof(endPos));
 
             switch (typeName)
             {
@@ -34,13 +34,19 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
 
         public RecordFieldType Type { get; }
 
-        public int Position { get; }
+        /// <summary>
+        /// 1 - based start position.
+        /// </summary>
+        public int StartPos { get; }
 
-        public int Length { get; }
+        /// <summary>
+        /// End position.
+        /// </summary>
+        public int EndPos { get; }
 
         public override string ToString()
         {
-            return $"{nameof(Name)}: {Name}, {nameof(TypeName)}: {TypeName}, {nameof(Position)}: {Position}, {nameof(Length)}: {Length}";
+            return $"{nameof(Name)}: {Name}, {nameof(TypeName)}: {TypeName}, {nameof(StartPos)}: {StartPos}, {nameof(EndPos)}: {EndPos}";
         }
     }
 }
