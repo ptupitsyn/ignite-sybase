@@ -20,10 +20,10 @@ namespace Apache.Ignite.Sybase.Ingest
 
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
-            ParseCtls(dir);
+            TestReadAllData(dir);
         }
 
-        private static void ParseDdls(string dir)
+        private static void TestParseDdls(string dir)
         {
             var ddlFiles = Directory.GetFiles(Path.Combine(dir, "ddl"));
 
@@ -50,16 +50,9 @@ namespace Apache.Ignite.Sybase.Ingest
             Console.WriteLine(string.Join("\n", dataTypes));
         }
 
-        private static void ParseCtls(string dir)
+        private static void TestParseCtls(string dir)
         {
-            var ctlFiles = Directory.GetFiles(Path.Combine(dir, "load_script"), "*.ctl");
-
-            Console.WriteLine($"Found {ctlFiles.Length} CTL files.");
-
-            var recordDescriptors = ctlFiles
-                .Select(CtlParser.ParseCtl)
-                .Where(t => t != null)
-                .ToArray();
+            var recordDescriptors = GetRecordDescriptors(dir);
 
             foreach (var recordDescriptor in recordDescriptors)
             {
@@ -74,6 +67,38 @@ namespace Apache.Ignite.Sybase.Ingest
                 .Distinct();
 
             Console.WriteLine(string.Join("\n", dataTypes));
+        }
+
+        private static void TestReadAllData(string dir)
+        {
+            var recordDescriptors = GetRecordDescriptors(dir);
+
+            foreach (var recordDescriptor in recordDescriptors)
+            {
+                var fileName = recordDescriptor.InFile.Split(
+                    new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
+                    StringSplitOptions.RemoveEmptyEntries)
+                    .Last();
+
+                var fullPath = Path.Combine(dir, fileName + ".gz");
+
+                if (!File.Exists(fullPath))
+                {
+                    continue;
+                }
+
+                Console.WriteLine(fullPath);
+            }
+        }
+
+        private static RecordDescriptor[] GetRecordDescriptors(string dir)
+        {
+            var ctlFiles = Directory.GetFiles(Path.Combine(dir, "load_script"), "*.ctl");
+
+            return ctlFiles
+                .Select(CtlParser.ParseCtl)
+                .Where(t => t != null)
+                .ToArray();
         }
     }
 }

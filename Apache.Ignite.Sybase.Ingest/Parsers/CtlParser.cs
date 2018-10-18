@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
+    /// <summary>
+    /// Parses CTL files.
+    /// TODO: We can parse ctrl.gen files instead, they are simpler (CSV). But I missed that part, so here goes.
+    /// </summary>
     public static class CtlParser
     {
         private const string TokenIntoTable = "Into table";
