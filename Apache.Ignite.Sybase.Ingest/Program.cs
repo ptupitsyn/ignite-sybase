@@ -97,7 +97,7 @@ namespace Apache.Ignite.Sybase.Ingest
                 using (var reader = new BinaryRecordReader(recordDescriptor, gzipStream))
                 {
                     // Read top 3 records for demo.
-                    for (int i = 0; i < 3; i++)
+                    for (var i = 0; i < 3; i++)
                     {
                         var rec = reader.Read();
 

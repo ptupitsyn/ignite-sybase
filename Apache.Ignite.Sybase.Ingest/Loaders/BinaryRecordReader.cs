@@ -39,37 +39,39 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
             for (var index = 0; index < _recordDescriptor.Fields.Count; index++)
             {
                 var field = _recordDescriptor.Fields[index];
-                var pos = field.StartPos - 1;
-                var len = field.EndPos - pos;
-
-                switch (field.Type)
-                {
-                    case RecordFieldType.String:
-                        // All strings are ASCII, see .dat.sql files.
-                        // Strings are padded with spaces (because fixed length).
-                        result[index] = Encoding.ASCII.GetString(_buffer, pos, len).TrimEnd();
-                        break;
-
-                    case RecordFieldType.Long:
-                        fixed (byte* p = &_buffer[pos])
-                        {
-                            result[index] = *(long*) p;
-                        }
-                        break;
-
-                    case RecordFieldType.Double:
-                        fixed (byte* p = &_buffer[pos])
-                        {
-                            result[index] = *(double*) p;
-                        }
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                result[index] = ReadField(field);
             }
 
             return result;
+        }
+
+        private unsafe object ReadField(RecordField field)
+        {
+            var pos = field.StartPos - 1;
+            var len = field.EndPos - pos;
+
+            switch (field.Type)
+            {
+                case RecordFieldType.String:
+                    // All strings are ASCII, see .dat.sql files.
+                    // Strings are padded with spaces (because fixed length).
+                    return Encoding.ASCII.GetString(_buffer, pos, len).TrimEnd();
+
+                case RecordFieldType.Long:
+                    fixed (byte* p = &_buffer[pos])
+                    {
+                        return *(long*) p;
+                    }
+
+                case RecordFieldType.Double:
+                    fixed (byte* p = &_buffer[pos])
+                    {
+                        return *(double*) p;
+                    }
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void Dispose()
