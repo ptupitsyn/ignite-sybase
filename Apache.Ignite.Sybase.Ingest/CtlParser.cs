@@ -40,7 +40,7 @@ namespace Apache.Ignite.Sybase.Ingest
                 if (line.StartsWith(TokenIntoTable, StringComparison.InvariantCultureIgnoreCase))
                 {
                     tableName = line
-                        .Substring(TokenInfile.Length)
+                        .Substring(TokenIntoTable.Length)
                         .Split(" ", StringSplitOptions.RemoveEmptyEntries)
                         .First();
 
@@ -81,59 +81,5 @@ namespace Apache.Ignite.Sybase.Ingest
                 int.Parse(posParts[1]),
                 int.Parse(posParts[2]));
         }
-    }
-
-    public class RecordDescriptor
-    {
-        public RecordDescriptor(int length, IReadOnlyCollection<RecordField> fields, string inFile, string tableName)
-        {
-            Length = length;
-            Fields = fields;
-            InFile = inFile;
-            TableName = tableName;
-        }
-
-        public int Length { get; }
-
-        public string InFile { get; }
-
-        public string TableName { get; }
-
-        public IReadOnlyCollection<RecordField> Fields { get; }
-
-        public override string ToString()
-        {
-            return $"{nameof(Length)}: {Length}, {nameof(InFile)}: {InFile}, {nameof(TableName)}: {TableName}";
-        }
-    }
-
-    public class RecordField
-    {
-        public RecordField(string name, string typeName, int position, int length)
-        {
-            Name = name;
-            TypeName = typeName;
-            Position = position;
-            Length = length;
-        }
-
-        public string Name { get; }
-
-        public string TypeName { get; }
-
-        public int Position { get; }
-
-        public int Length { get; }
-
-        public override string ToString()
-        {
-            return $"{nameof(Name)}: {Name}, {nameof(TypeName)}: {TypeName}, {nameof(Position)}: {Position}, {nameof(Length)}: {Length}";
-        }
-    }
-
-    public enum RecordFieldType
-    {
-        None,
-        String,
     }
 }
