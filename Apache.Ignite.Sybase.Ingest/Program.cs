@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
@@ -56,15 +58,18 @@ namespace Apache.Ignite.Sybase.Ingest
             using (var ignite = Ignition.Start(cfg))
             {
                 var recordDescriptors = Tests.GetRecordDescriptors(dir);
-                foreach (var desc in recordDescriptors)
-                {
-                    LoadCache(ignite, desc, dir);
-                }
+
+                // ReSharper disable once AccessToDisposedClosure
+                Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));
             }
         }
 
         private static void LoadCache(IIgnite ignite, RecordDescriptor desc, string dir)
         {
+            var sw = Stopwatch.StartNew();
+            long key = 0;
+            var cacheName = desc.TableName;
+
             var (reader, fullPath) = desc.GetInFileStream(dir);
 
             if (reader == null)
@@ -75,14 +80,12 @@ namespace Apache.Ignite.Sybase.Ingest
 
             using (reader)
             {
-                var cacheName = desc.TableName;
                 ignite.GetOrCreateCache<long, object>(cacheName);
                 var binary = ignite.GetBinary();
 
                 Console.WriteLine(fullPath);
 
                 // TODO: How do we determine proper primary key?
-                long key = 0;
 
                 using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
                 {
@@ -96,11 +99,17 @@ namespace Apache.Ignite.Sybase.Ingest
                         }
 
                         var binaryObject = builder.Build();
-                        Console.WriteLine(binaryObject);
+                        // Console.WriteLine(binaryObject);
                         streamer.AddData(key++, binaryObject);
+                        // streamer.Flush();
                     }
                 }
             }
+
+            var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+            var fileSize = new FileInfo(fullPath).Length;
+            var mbps = fileSize / sw.ElapsedMilliseconds / 1000;
+            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {itemsPerSecond} items/sec, {mbps} MB/sec");
         }
     }
 }
