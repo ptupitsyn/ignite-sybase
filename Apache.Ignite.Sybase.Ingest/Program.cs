@@ -39,15 +39,15 @@ namespace Apache.Ignite.Sybase.Ingest
                 {
                     IpFinder = new TcpDiscoveryStaticIpFinder
                     {
-                        Endpoints = new[] {"127.0.0.1:47500"}
+                        Endpoints = new[] {"127.0.0.1:47500..47501"}
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
                 },
-                // 2.4 works?
-                // 2.5-2.7 crashes, only when these values are specified.
+                // 2.4 works. They use GG 8.4, so that is what we should use.
+                // 2.5-2.7 have issues, only when these values are specified.
                 JvmInitialMemoryMb = 2000,
-                JvmMaxMemoryMb = 3000
-
+                JvmMaxMemoryMb = 3000,
+                ClientMode = true
             };
 
             var ignite = Ignition.Start(cfg);
@@ -65,6 +65,7 @@ namespace Apache.Ignite.Sybase.Ingest
             Console.WriteLine($" * {cacheNames.Count} caches");
             Console.WriteLine($" * {totalItems} cache entries");
             Console.WriteLine($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
+            Console.ReadKey();
         }
 
         private static void LoadCache(IIgnite ignite, RecordDescriptor desc, string dir)
