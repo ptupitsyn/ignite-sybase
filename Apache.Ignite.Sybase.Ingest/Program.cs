@@ -12,11 +12,11 @@ using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            // TODO: We should saturate CPU, Network, and Disk for best perf.
+            // We should saturate CPU, Network, and Disk for best perf.
             // Ideally producer/consumer with back-pressure is required: load data from disk and parse, pass to Streamer.
             // For simplicity let's just have single-threaded method to load single table, then run in parallel for multiple tables.
 
@@ -51,7 +51,7 @@ namespace Apache.Ignite.Sybase.Ingest
             };
 
             var ignite = Ignition.Start(cfg);
-            var recordDescriptors = Tests.GetRecordDescriptors(dir);
+            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(2);
 
             var sw = Stopwatch.StartNew();
             Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));
