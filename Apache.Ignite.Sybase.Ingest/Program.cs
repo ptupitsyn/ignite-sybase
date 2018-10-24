@@ -43,8 +43,10 @@ namespace Apache.Ignite.Sybase.Ingest
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
                 },
-                JvmInitialMemoryMb = 4086,
-                JvmMaxMemoryMb = 9000
+                // 2.4 works?
+                // 2.5-2.7 crashes, only when these values are specified.
+                JvmInitialMemoryMb = 2000,
+                JvmMaxMemoryMb = 3000
 
             };
 
@@ -69,7 +71,6 @@ namespace Apache.Ignite.Sybase.Ingest
         {
             var sw = Stopwatch.StartNew();
             long key = 0;
-            var cacheName = desc.TableName;
 
             var (reader, fullPath) = desc.GetInFileStream(dir);
 
@@ -80,10 +81,10 @@ namespace Apache.Ignite.Sybase.Ingest
             }
 
             Console.WriteLine(fullPath);
+            var cacheName = CreateCache(ignite, desc);
 
             using (reader)
             {
-                ignite.GetOrCreateCache<long, object>(cacheName);
                 var binary = ignite.GetBinary();
 
                 using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
@@ -107,6 +108,17 @@ namespace Apache.Ignite.Sybase.Ingest
 
             var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
             Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+        }
+
+        private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
+        {
+            // Create new cache (in case when query entities have changed).
+            var cacheName = desc.TableName;
+
+            ignite.DestroyCache(cacheName);
+            ignite.CreateCache<long, object>(cacheName);
+
+            return cacheName;
         }
     }
 }
