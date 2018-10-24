@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
+using Apache.Ignite.Sybase.Ingest.Cache;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
-using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
@@ -113,12 +113,12 @@ namespace Apache.Ignite.Sybase.Ingest
         private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
         {
             // Create new cache (in case when query entities have changed).
-            var cacheName = desc.TableName;
+            var cacheCfg = CacheConfigurator.GetQueryCacheConfiguration(desc);
 
-            ignite.DestroyCache(cacheName);
-            ignite.CreateCache<long, object>(cacheName);
+            ignite.DestroyCache(cacheCfg.Name);
+            ignite.CreateCache<long, object>(cacheCfg);
 
-            return cacheName;
+            return cacheCfg.Name;
         }
     }
 }

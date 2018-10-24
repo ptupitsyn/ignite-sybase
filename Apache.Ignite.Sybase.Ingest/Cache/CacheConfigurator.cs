@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Apache.Ignite.Core.Cache.Configuration;
 using Apache.Ignite.Sybase.Ingest.Common;
@@ -6,7 +5,7 @@ using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    public static class CacheConfigurer
+    public static class CacheConfigurator
     {
         public static CacheConfiguration GetQueryCacheConfiguration(RecordDescriptor desc)
         {
