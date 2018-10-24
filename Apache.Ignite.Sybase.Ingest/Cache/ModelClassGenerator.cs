@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
@@ -50,7 +51,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     {
                         yield return line
                             .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
-                            .Replace("SQL_NAME", GetPropertyName(field.Name))
+                            .Replace("SQL_NAME", field.Name)
                             .Replace("string", field.Type.GetShortTypeName());
                     }
                 }
@@ -116,7 +117,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         private static string GetPropertyName(string fieldName)
         {
-            return fieldName.Replace("_", " ").ToUpperCamel();
+            return string.Concat(fieldName.Split("_").Select(x => x.ToUpperCamel()));
         }
     }
 }
