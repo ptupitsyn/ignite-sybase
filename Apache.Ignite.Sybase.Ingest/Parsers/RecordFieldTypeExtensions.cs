@@ -21,5 +21,23 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
                     throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null);
             }
         }
+
+        public static string GetShortTypeName(this RecordFieldType fieldType)
+        {
+            switch (fieldType)
+            {
+                case RecordFieldType.String:
+                    return "string";
+
+                case RecordFieldType.Long:
+                    return "long";
+
+                case RecordFieldType.Double:
+                    return "double";
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null);
+            }
+        }
     }
 }
