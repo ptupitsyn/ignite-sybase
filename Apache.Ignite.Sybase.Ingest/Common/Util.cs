@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -37,5 +38,33 @@ namespace Apache.Ignite.Sybase.Ingest.Common
 
             return (reader, fullPath);
         }
+
+        public static string ToUpperCamel(this string s)
+        {
+            if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
+            {
+                return s;
+            }
+
+            var charArray = s.ToCharArray();
+            for (var index = 0; index < charArray.Length && (index != 1 || char.IsUpper(charArray[index])); ++index)
+            {
+                var flag = index + 1 < charArray.Length;
+                if (index > 0 & flag && !char.IsUpper(charArray[index + 1]))
+                {
+                    if (char.IsSeparator(charArray[index + 1]))
+                    {
+                        charArray[index] = char.ToUpper(charArray[index], CultureInfo.InvariantCulture);
+                    }
+
+                    break;
+                }
+
+                charArray[index] = char.ToUpper(charArray[index], CultureInfo.InvariantCulture);
+            }
+
+            return new string(charArray);
+        }
+
     }
 }

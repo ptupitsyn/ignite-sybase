@@ -44,12 +44,13 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 {
                     yield return line.Replace(nameof(ModelClassTemplate), className);
                 }
-                else if (l.StartsWith("[QuerySqlField]"))
+                else if (l.StartsWith("[QuerySqlField"))
                 {
                     foreach (var field in desc.Fields)
                     {
                         yield return line
-                            .Replace(nameof(ModelClassTemplate.FieldTemplate), field.Name)
+                            .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
+                            .Replace("SQL_NAME", GetPropertyName(field.Name))
                             .Replace("string", field.Type.GetShortTypeName());
                     }
                 }
@@ -58,7 +59,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     foreach (var field in desc.Fields)
                     {
                         yield return line
-                            .Replace(nameof(ModelClassTemplate.FieldTemplate), field.Name)
+                            .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
                             .Replace("WriteString", field.Type.GetWriteMethodName());
                     }
                 }
@@ -67,7 +68,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     foreach (var field in desc.Fields)
                     {
                         yield return line
-                            .Replace(nameof(ModelClassTemplate.FieldTemplate), field.Name)
+                            .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
                             .Replace("ReadString", field.Type.GetReadMethodName());
                     }
                 }
@@ -90,16 +91,18 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var pos = field.StartPos - 1;
             var len = field.EndPos - pos;
 
+            var propertyName = GetPropertyName(field.Name);
+
             switch (field.Type)
             {
                 case RecordFieldType.String:
-                    return $"{field.Name} = Encoding.ASCII.GetString(buffer, {pos}, {len}).TrimEnd();";
+                    return $"{propertyName} = Encoding.ASCII.GetString(buffer, {pos}, {len}).TrimEnd();";
 
                 case RecordFieldType.Long:
-                    return $"{field.Name} = *(long*) (p + {pos});";
+                    return $"{propertyName} = *(long*) (p + {pos});";
 
                 case RecordFieldType.Double:
-                    return $"{field.Name} = *(double*) (p + {pos});";
+                    return $"{propertyName} = *(double*) (p + {pos});";
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(field.Type), field.Type, null);
@@ -109,6 +112,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         private static string GetClassName(string tableName)
         {
             return tableName.Replace(".", "__");
+        }
+
+        private static string GetPropertyName(string fieldName)
+        {
+            return fieldName.Replace("_", " ").ToUpperCamel();
         }
     }
 }

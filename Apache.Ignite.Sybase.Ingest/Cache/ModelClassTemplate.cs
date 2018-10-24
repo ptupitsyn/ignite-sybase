@@ -7,7 +7,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 {
     public class ModelClassTemplate : IBinarizable, ICanReadFromRecordBuffer
     {
-        [QuerySqlField] public string FieldTemplate { get; set; }
+        [QuerySqlField(Name = "SQL_NAME")] public string FieldTemplate { get; set; }
 
         public void WriteBinary(IBinaryWriter writer)
         {
