@@ -50,6 +50,24 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             .Replace("string", field.Type.GetShortTypeName());
                     }
                 }
+                else if (l.StartsWith("writer.WriteString"))
+                {
+                    foreach (var field in desc.Fields)
+                    {
+                        yield return line
+                            .Replace(nameof(ModelClassTemplate.FieldTemplate), field.Name)
+                            .Replace("WriteString", field.Type.GetWriteMethodName());
+                    }
+                }
+                else if (l.StartsWith("FieldTemplate = reader.ReadString"))
+                {
+                    foreach (var field in desc.Fields)
+                    {
+                        yield return line
+                            .Replace(nameof(ModelClassTemplate.FieldTemplate), field.Name)
+                            .Replace("ReadString", field.Type.GetReadMethodName());
+                    }
+                }
                 else
                 {
                     yield return line;
