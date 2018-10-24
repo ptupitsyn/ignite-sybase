@@ -55,7 +55,7 @@ namespace Apache.Ignite.Sybase.Ingest
             };
 
             var ignite = Ignition.Start(cfg);
-            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(3);
+            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(30);
 
             var sw = Stopwatch.StartNew();
 
@@ -190,6 +190,7 @@ namespace Apache.Ignite.Sybase.Ingest
                 {
                     new QueryEntity
                     {
+                        TableName = desc.TableName,
                         KeyType = typeof(long),
                         ValueType = typeof(T)
                     }
