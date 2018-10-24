@@ -12,7 +12,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         private static string[] LoadTemplate()
         {
-            var asmPath = Assembly.GetExecutingAssembly().Location;
+            var asmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var codePath = Path.Combine(asmPath, "..", "..", "..", "Cache", nameof(ModelClassTemplate) + ".cs");
 
             return File.ReadAllLines(codePath);
