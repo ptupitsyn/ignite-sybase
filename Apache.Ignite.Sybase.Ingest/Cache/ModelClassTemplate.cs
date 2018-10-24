@@ -21,9 +21,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)
         {
-            const int pos = 0;
-            const int len = 256;
-            FieldTemplate = Encoding.ASCII.GetString(buffer, pos, len).TrimEnd();
+            fixed (byte* p = &buffer[0])
+            {
+                FieldTemplate = Encoding.ASCII.GetString(buffer, 0, 1).TrimEnd();
+            }
         }
     }
 }

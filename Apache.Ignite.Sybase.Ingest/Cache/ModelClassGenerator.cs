@@ -68,11 +68,47 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             .Replace("ReadString", field.Type.GetReadMethodName());
                     }
                 }
+                else if (l.StartsWith("const int pos = 0"))
+                {
+                    foreach (var field in desc.Fields)
+                    {
+                        yield return line.Replace("0", field.StartPos.ToString());
+                    }
+                }
+                else if (l.StartsWith("const int pos = 0"))
+                {
+                    foreach (var field in desc.Fields)
+                    {
+                        yield return new string(' ', 16) + GetReadFromRecordBufferCode(field);
+                    }
+                }
                 else
                 {
                     yield return line;
                 }
             }
         }
+
+        private static string GetReadFromRecordBufferCode(RecordField field)
+        {
+            var pos = field.StartPos - 1;
+            var len = field.EndPos - pos;
+
+            switch (field.Type)
+            {
+                case RecordFieldType.String:
+                    return $"{field.Name} = Encoding.ASCII.GetString(buffer, {pos}, {len}).TrimEnd();";
+
+                case RecordFieldType.Long:
+                    return $"{field.Name} = *(long*) (p + {pos});";
+
+                case RecordFieldType.Double:
+                    return $"{field.Name} = *(double*) (p + {pos});";
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(field.Type), field.Type, null);
+            }
+        }
+
     }
 }
