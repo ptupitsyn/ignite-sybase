@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Cache.Configuration;
@@ -57,7 +58,19 @@ namespace Apache.Ignite.Sybase.Ingest
             var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(3);
 
             var sw = Stopwatch.StartNew();
-            Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));
+
+            Parallel.ForEach(recordDescriptors, desc =>
+            {
+                // A bit of reflection won't hurt once per table.
+                var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
+                var type = Type.GetType(typeName);
+                var method = typeof(Program).GetMethod(nameof(LoadCacheGeneric),
+                    BindingFlags.Static | BindingFlags.NonPublic);
+                var genericMethod = method.MakeGenericMethod(type);
+
+                genericMethod.Invoke(null, new object[] {ignite, desc, dir});
+            });
+
             var elapsed = sw.Elapsed;
 
             var cacheNames = ignite.GetCacheNames();
@@ -133,7 +146,6 @@ namespace Apache.Ignite.Sybase.Ingest
 
             using (reader)
             {
-                var binary = ignite.GetBinary();
                 var buffer = new byte[desc.Length];
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
