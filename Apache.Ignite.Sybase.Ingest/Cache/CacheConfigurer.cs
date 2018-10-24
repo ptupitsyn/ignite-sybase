@@ -33,9 +33,13 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             return config;
         }
 
-        private static QueryField GetQueryField(RecordField arg)
+        private static QueryField GetQueryField(RecordField field)
         {
-            throw new System.NotImplementedException();
+            return new QueryField
+            {
+                Name = field.Name,
+                FieldType = field.Type.GetClrType()
+            };
         }
     }
 }
