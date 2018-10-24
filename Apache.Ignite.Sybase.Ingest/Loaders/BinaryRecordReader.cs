@@ -46,6 +46,24 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
             return result;
         }
 
+        public bool Read(byte[] buffer)
+        {
+            if (!_stream.CanRead)
+            {
+                return false;
+            }
+
+            var read = _stream.Read(buffer, 0, buffer.Length);
+
+            if (read < _buffer.Length)
+            {
+                // EOF
+                return false;
+            }
+
+            return true;
+        }
+
         public IBinaryObjectBuilder ReadAsBinaryObject(string typeName, IBinary binary)
         {
             if (!_stream.CanRead)

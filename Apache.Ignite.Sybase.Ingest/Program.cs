@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Apache.Ignite.Core;
+using Apache.Ignite.Core.Cache.Configuration;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.Sybase.Ingest.Cache;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
+using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
@@ -28,8 +30,8 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
             // Tests.TestReadAllData(dir);
-            // LoadIgnite(dir);
-            GenerateModels(dir);
+            // GenerateModels(dir);
+            LoadIgnite(dir);
         }
 
         private static void LoadIgnite(string dir)
@@ -112,6 +114,49 @@ namespace Apache.Ignite.Sybase.Ingest
             Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
         }
 
+        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir)
+            where T : ICanReadFromRecordBuffer, new()
+        {
+            var sw = Stopwatch.StartNew();
+            long key = 0;
+
+            var (reader, fullPath) = desc.GetInFileStream(dir);
+
+            if (reader == null)
+            {
+                // File does not exist.
+                return;
+            }
+
+            Console.WriteLine(fullPath);
+            var cacheName = CreateCacheGeneric<T>(ignite, desc);
+
+            using (reader)
+            {
+                var binary = ignite.GetBinary();
+                var buffer = new byte[desc.Length];
+
+                using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                {
+                    while (true)
+                    {
+                        if (!reader.Read(buffer))
+                        {
+                            break;
+                        }
+
+                        var entity = new T();
+                        entity.ReadFromRecordBuffer(buffer);;
+
+                        streamer.AddData(key++, entity);
+                    }
+                }
+            }
+
+            var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+        }
+
         private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
         {
             // Create new cache (in case when query entities have changed).
@@ -123,6 +168,29 @@ namespace Apache.Ignite.Sybase.Ingest
             return cacheCfg.Name;
         }
 
+        private static string CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
+        {
+            // Create new cache (in case when query entities have changed).
+            var cacheCfg = new CacheConfiguration
+            {
+                Name = desc.TableName,
+                QueryEntities = new[]
+                {
+                    new QueryEntity
+                    {
+                        KeyType = typeof(long),
+                        ValueType = typeof(T)
+                    }
+                }
+            };
+
+            ignite.DestroyCache(cacheCfg.Name);
+            ignite.CreateCache<long, T>(cacheCfg);
+
+            return cacheCfg.Name;
+        }
+
+        [UsedImplicitly]
         private static void GenerateModels(string dir)
         {
             var recordDescriptors = Tests.GetRecordDescriptors(dir);

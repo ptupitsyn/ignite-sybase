@@ -110,7 +110,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
         }
 
-        private static string GetClassName(string tableName)
+        public static string GetClassName(string tableName)
         {
             return GetPropertyName(tableName.Split(".").Last());
         }
