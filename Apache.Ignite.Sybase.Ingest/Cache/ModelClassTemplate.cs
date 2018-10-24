@@ -5,7 +5,7 @@ using Apache.Ignite.Core.Cache.Configuration;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    public class ModelClassTemplate : IBinarizable
+    public class ModelClassTemplate : IBinarizable, ICanReadFromRecordBuffer
     {
         [QuerySqlField] public string FieldTemplate { get; set; }
 
