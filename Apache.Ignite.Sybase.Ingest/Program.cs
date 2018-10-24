@@ -28,7 +28,8 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
 
             // Tests.TestReadAllData(dir);
-            LoadIgnite(dir);
+            // LoadIgnite(dir);
+            GenerateModels(dir);
         }
 
         private static void LoadIgnite(string dir)
@@ -120,6 +121,18 @@ namespace Apache.Ignite.Sybase.Ingest
             ignite.CreateCache<long, object>(cacheCfg);
 
             return cacheCfg.Name;
+        }
+
+        private static void GenerateModels(string dir)
+        {
+            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(1);
+
+            foreach (var desc in recordDescriptors)
+            {
+                var res = ModelClassGenerator.GenerateClass(desc);
+
+                Console.WriteLine(res);
+            }
         }
     }
 }
