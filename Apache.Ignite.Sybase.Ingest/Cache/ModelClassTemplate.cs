@@ -1,11 +1,10 @@
+// ReSharper disable All
 using System.Text;
 using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Core.Cache.Configuration;
-using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public class ModelClassTemplate : IBinarizable
     {
         [QuerySqlField] public string FieldTemplate { get; set; }
