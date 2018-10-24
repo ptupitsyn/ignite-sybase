@@ -51,7 +51,7 @@ namespace Apache.Ignite.Sybase.Ingest
             };
 
             var ignite = Ignition.Start(cfg);
-            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(2);
+            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(3);
 
             var sw = Stopwatch.StartNew();
             Parallel.ForEach(recordDescriptors, desc => LoadCache(ignite, desc, dir));

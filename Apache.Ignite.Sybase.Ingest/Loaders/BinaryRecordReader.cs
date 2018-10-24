@@ -102,6 +102,8 @@ namespace Apache.Ignite.Sybase.Ingest.Loaders
 
         private unsafe void ReadField(IBinaryObjectBuilder builder, RecordField field)
         {
+            // TODO: Binary object builder seems to be inefficient because of internal structure handling.
+            // We should try with entity classes, and each class can implement RecordField reading efficiently.
             var pos = field.StartPos - 1;
             var len = field.EndPos - pos;
 
