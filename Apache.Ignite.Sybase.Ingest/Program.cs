@@ -129,9 +129,7 @@ namespace Apache.Ignite.Sybase.Ingest
 
             foreach (var desc in recordDescriptors)
             {
-                var res = ModelClassGenerator.GenerateClass(desc);
-
-                Console.WriteLine(res);
+                ModelClassGenerator.GenerateClass(desc);
             }
         }
     }

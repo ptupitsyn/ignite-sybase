@@ -9,27 +9,32 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 {
     public static class ModelClassGenerator
     {
+        private static readonly string AsmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private static readonly Lazy<string[]> Template = new Lazy<string[]>(LoadTemplate);
 
         private static string[] LoadTemplate()
         {
-            var asmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var codePath = Path.Combine(asmPath, "..", "..", "..", "Cache", nameof(ModelClassTemplate) + ".cs");
+            var codePath = Path.Combine(AsmPath, "..", "..", "..", "Cache", nameof(ModelClassTemplate) + ".cs");
 
             return File.ReadAllLines(codePath);
         }
 
-        public static string GenerateClass(RecordDescriptor desc)
+        public static void GenerateClass(RecordDescriptor desc)
         {
             Arg.NotNull(desc, nameof(desc));
 
             var template = Template.Value;
-            var lines = GetLines(template, desc);
+            var className = GetClassName(desc.TableName);
+            var lines = GetLines(template, desc, className);
+            var targetPath = Path.Combine(AsmPath, "..", "..", "..", "Models", className + ".cs");
 
-            return string.Join(Environment.NewLine, lines);
+            File.WriteAllLines(targetPath, lines);
         }
 
-        private static IEnumerable<string> GetLines(IEnumerable<string> template, RecordDescriptor desc)
+        private static IEnumerable<string> GetLines(
+            IEnumerable<string> template,
+            RecordDescriptor desc,
+            string className)
         {
             foreach (var line in template)
             {
@@ -37,9 +42,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 if (l.StartsWith("public class"))
                 {
-                    yield return line
-                        .Replace(nameof(ModelClassTemplate), desc.TableName)
-                        .Replace(".", "__");
+                    yield return line.Replace(nameof(ModelClassTemplate), className);
                 }
                 else if (l.StartsWith("[QuerySqlField]"))
                 {
@@ -68,14 +71,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             .Replace("ReadString", field.Type.GetReadMethodName());
                     }
                 }
-                else if (l.StartsWith("const int pos = 0"))
-                {
-                    foreach (var field in desc.Fields)
-                    {
-                        yield return line.Replace("0", field.StartPos.ToString());
-                    }
-                }
-                else if (l.StartsWith("const int pos = 0"))
+                else if (l.StartsWith("FieldTemplate = Encoding.ASCII.GetString"))
                 {
                     foreach (var field in desc.Fields)
                     {
@@ -110,5 +106,9 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
         }
 
+        private static string GetClassName(string tableName)
+        {
+            return tableName.Replace(".", "__");
+        }
     }
 }
