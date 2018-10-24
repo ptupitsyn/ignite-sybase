@@ -5,7 +5,7 @@ using Apache.Ignite.Core.Cache.Configuration;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    public class acc_mkt_opm_d2__attr_attributes_lookup : IBinarizable, ICanReadFromRecordBuffer
+    public class AttrAttributesLookup : IBinarizable, ICanReadFromRecordBuffer
     {
         [QuerySqlField(Name = "attribute_dependent_codeset")] public string AttributeDependentCodeset { get; set; }
         [QuerySqlField(Name = "attribute_name")] public string AttributeName { get; set; }

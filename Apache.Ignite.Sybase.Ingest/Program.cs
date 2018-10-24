@@ -125,7 +125,7 @@ namespace Apache.Ignite.Sybase.Ingest
 
         private static void GenerateModels(string dir)
         {
-            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(1);
+            var recordDescriptors = Tests.GetRecordDescriptors(dir);
 
             foreach (var desc in recordDescriptors)
             {
