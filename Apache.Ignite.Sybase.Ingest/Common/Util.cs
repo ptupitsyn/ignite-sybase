@@ -41,30 +41,15 @@ namespace Apache.Ignite.Sybase.Ingest.Common
 
         public static string ToUpperCamel(this string s)
         {
-            if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))
+            if (string.IsNullOrEmpty(s) || !char.IsLower(s[0]))
             {
                 return s;
             }
 
             var charArray = s.ToCharArray();
-            for (var index = 0; index < charArray.Length && (index != 1 || char.IsUpper(charArray[index])); ++index)
-            {
-                var flag = index + 1 < charArray.Length;
-                if (index > 0 & flag && !char.IsUpper(charArray[index + 1]))
-                {
-                    if (char.IsSeparator(charArray[index + 1]))
-                    {
-                        charArray[index] = char.ToUpper(charArray[index], CultureInfo.InvariantCulture);
-                    }
-
-                    break;
-                }
-
-                charArray[index] = char.ToUpper(charArray[index], CultureInfo.InvariantCulture);
-            }
+            charArray[0] = char.ToUpper(charArray[0], CultureInfo.InvariantCulture);
 
             return new string(charArray);
         }
-
     }
 }
