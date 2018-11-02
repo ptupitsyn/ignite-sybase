@@ -18,6 +18,9 @@ namespace Apache.Ignite.Sybase.Ingest
             // INTEGER(8)
             // DOUBLE
 
+            // Record format is defined in *.ctl files AND *.ctrl.gen files
+            // Data files are *.dat.gz, and not all of them have ctl, so we should use *.ctrl.gen
+
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
             // Tests.TestReadAllData(dir);
