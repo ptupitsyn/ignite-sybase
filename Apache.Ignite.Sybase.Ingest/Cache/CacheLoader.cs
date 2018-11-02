@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var ignite = Ignition.Start(cfg);
 
             // TODO: Load only 10 for a quick test.
-            var recordDescriptors = Tests.GetRecordDescriptors(dir).Take(10);
+            var recordDescriptors = GetRecordDescriptors(dir).Take(10);
 
             var sw = Stopwatch.StartNew();
 
@@ -49,6 +50,16 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             Console.WriteLine($" * {totalItems} cache entries");
             Console.WriteLine($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
             Console.ReadKey();
+        }
+
+        private static RecordDescriptor[] GetRecordDescriptors(string dir)
+        {
+            var ctlFiles = Directory.GetFiles(dir, "*.ctrl.gen");
+
+            return ctlFiles
+                .Select(CtrlGenParser.Parse)
+                .Where(t => t != null)
+                .ToArray();
         }
 
         private static IgniteConfiguration GetIgniteConfiguration()
