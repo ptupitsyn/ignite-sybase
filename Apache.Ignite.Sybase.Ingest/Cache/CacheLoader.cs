@@ -19,11 +19,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     {
         public static void LoadFromPath(string dir)
         {
-            var cfg = GetIgniteConfiguration();
-            var ignite = Ignition.Start(cfg);
-
             // TODO: Load only 10 for a quick test.
             var recordDescriptors = GetRecordDescriptors(dir).Take(10);
+
+            var cfg = GetIgniteConfiguration();
+            var ignite = Ignition.Start(cfg);
 
             var sw = Stopwatch.StartNew();
 
