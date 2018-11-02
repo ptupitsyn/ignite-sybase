@@ -3,9 +3,8 @@ using System.IO;
 using System.Text;
 using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Sybase.Ingest.Common;
-using Apache.Ignite.Sybase.Ingest.Parsers;
 
-namespace Apache.Ignite.Sybase.Ingest.Loaders
+namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
     public class BinaryRecordReader : IDisposable
     {

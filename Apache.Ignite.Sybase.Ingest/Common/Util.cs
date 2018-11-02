@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Apache.Ignite.Sybase.Ingest.Loaders;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
 namespace Apache.Ignite.Sybase.Ingest.Common
