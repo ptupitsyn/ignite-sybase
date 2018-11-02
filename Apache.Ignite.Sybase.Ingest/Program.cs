@@ -18,7 +18,7 @@ namespace Apache.Ignite.Sybase.Ingest
             // INTEGER(8)
             // DOUBLE
 
-            var dir = Path.GetFullPath(args?.FirstOrDefault() ?? @"..\..\data");
+            var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
             // Tests.TestReadAllData(dir);
             // GenerateModels(dir);
