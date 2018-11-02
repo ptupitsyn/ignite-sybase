@@ -99,7 +99,7 @@ namespace Apache.Ignite.Sybase.Ingest
             var ctlFiles = Directory.GetFiles(Path.Combine(dir, "load_script"), "*.ctl");
 
             return ctlFiles
-                .Select(CtlParser.ParseCtl)
+                .Select(CtlParser.Parse)
                 .Where(t => t != null)
                 .ToArray();
         }

@@ -15,7 +15,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
         private const string TokenInfile = "INFILE";
         private const string TokenPosition = "position(";
 
-        public static RecordDescriptor ParseCtl(string path)
+        public static RecordDescriptor Parse(string path)
         {
             var lines = File.ReadAllLines(path);
             var inFile = string.Empty;
