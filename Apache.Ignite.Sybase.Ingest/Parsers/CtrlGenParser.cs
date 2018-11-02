@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using CsvHelper;
+using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest.Parsers
 {
@@ -15,7 +16,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
             using (var reader = File.OpenText(path))
             using (var csvReader = new CsvReader(reader))
             {
-                if (!csvReader.ReadHeader())
+                if (!csvReader.Read() || !csvReader.ReadHeader())
                 {
                     throw new Exception("Failed to read CSV header: " + path);
                 }
@@ -33,16 +34,20 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
                 return null;
             }
         }
-    }
 
-    public class CtrlGenParserRecord
-    {
-        public string ColumnName { get; set; }
-        public string ColumnDataType { get; set; }
-        public string ColumnLength { get; set; }
-        public string Scale { get; set; }
-        public string Position { get; set; }
-        public string StartPosition { get; set; }
-        public string EndPosition { get; set; }
+
+        [UsedImplicitly]
+        private class CtrlGenParserRecord
+        {
+            // ReSharper disable InconsistentNaming
+            public string column_name { get; set; }
+            public string column_data_type { get; set; }
+            public string column_length { get; set; }
+            public string scale { get; set; }
+            public string position { get; set; }
+            public string start_position { get; set; }
+            public string end_position { get; set; }
+            // ReSharper restore InconsistentNaming
+        }
     }
 }
