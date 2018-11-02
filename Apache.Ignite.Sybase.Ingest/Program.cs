@@ -47,8 +47,6 @@ namespace Apache.Ignite.Sybase.Ingest
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
                 },
-                // 2.4 works. They use GG 8.4, so that is what we should use.
-                // 2.5-2.7 have issues, only when these values are specified.
                 JvmInitialMemoryMb = 2000,
                 JvmMaxMemoryMb = 3000,
                 ClientMode = true
@@ -84,7 +82,7 @@ namespace Apache.Ignite.Sybase.Ingest
             Console.ReadKey();
         }
 
-        private static void LoadCache(IIgnite ignite, RecordDescriptor desc, string dir)
+        private static void LoadCacheBinaryObjects(IIgnite ignite, RecordDescriptor desc, string dir)
         {
             var sw = Stopwatch.StartNew();
             long key = 0;
