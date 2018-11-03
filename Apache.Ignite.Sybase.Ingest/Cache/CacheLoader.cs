@@ -8,6 +8,7 @@ using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Core.Cache.Configuration;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
+using Apache.Ignite.NLog;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using JetBrains.Annotations;
@@ -59,7 +60,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 },
                 JvmInitialMemoryMb = 2000,
                 JvmMaxMemoryMb = 3000,
-                ClientMode = true
+                ClientMode = true,
+                Logger = new IgniteNLogLogger()
             };
         }
 
