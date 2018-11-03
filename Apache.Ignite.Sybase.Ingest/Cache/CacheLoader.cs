@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Binary;
+using Apache.Ignite.Core.Cache;
 using Apache.Ignite.Core.Cache.Configuration;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
@@ -160,7 +161,12 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     log.Error($"Failed to find data files for '{desc.InFile}' in directory '{dir}'.");
                 }
 
-                var cacheName = CreateCacheGeneric<T>(ignite, desc);
+                var cache = CreateCacheGeneric<T>(ignite, desc);
+                if (cache.GetSize() == 0)
+                {
+                    log.Warn($"Skipping non-empty cache: {cache.Name}");
+                    return;
+                }
 
                 foreach (var dataFilePath in paths)
                 {
@@ -168,7 +174,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     var entryCount = 0;
 
                     using (var reader = desc.GetBinaryRecordReader(dataFilePath))
-                    using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                    using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                     {
                         var buffer = new byte[desc.Length];
 
@@ -195,7 +201,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
             catch (Exception e)
             {
-                log.Error(e, $"Failed to load {desc.InFile}");
+                log.Error(e, $"Failed to load {desc.InFile}: {e}");
             }
         }
 
@@ -230,9 +236,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             return cacheCfg.Name;
         }
 
-        private static string CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
+        private static ICache<long, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
         {
-            // Create new cache (in case when query entities have changed).
             var cacheCfg = new CacheConfiguration
             {
                 Name = desc.TableName,
@@ -248,10 +253,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 EnableStatistics = true
             };
 
-            ignite.DestroyCache(cacheCfg.Name);
-            ignite.CreateCache<long, T>(cacheCfg);
-
-            return cacheCfg.Name;
+            return ignite.GetOrCreateCache<long, T>(cacheCfg);
         }
 
         private class DataFileInfo
