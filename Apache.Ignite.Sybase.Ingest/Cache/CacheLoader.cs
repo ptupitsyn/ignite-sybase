@@ -128,36 +128,29 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     log.Error($"Failed to find data files for '{desc.InFile}' in directory '{dir}'.");
                 }
 
+                var cacheName = CreateCacheGeneric<T>(ignite, desc);
+
                 foreach (var dataFilePath in paths)
                 {
                     log.Info($"Starting {dataFilePath}...");
 
                     using (var reader = desc.GetBinaryRecordReader(dataFilePath))
+                    using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
                     {
-                        var cacheName = CreateCacheGeneric<T>(ignite, desc);
-
                         var buffer = new byte[desc.Length];
 
-                        using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                        while (reader.Read(buffer))
                         {
-                            while (true)
-                            {
-                                if (!reader.Read(buffer))
-                                {
-                                    break;
-                                }
+                            var entity = new T();
+                            entity.ReadFromRecordBuffer(buffer);
 
-                                var entity = new T();
-                                entity.ReadFromRecordBuffer(buffer);
-
-                                streamer.AddData(key++, entity);
-                            }
+                            streamer.AddData(key++, entity);
                         }
-
-                        var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                        log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
                     }
                 }
+
+                var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+                log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
             }
             catch (Exception e)
             {
