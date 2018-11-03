@@ -27,7 +27,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var sw = Stopwatch.StartNew();
 
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
-                Parallel.ForEach(recordDescriptors, desc => InvokeLoadCacheGeneric(dir, desc, ignite));
+                Parallel.ForEach(
+                    recordDescriptors,
+                    new ParallelOptions {MaxDegreeOfParallelism = 2},
+                    desc => InvokeLoadCacheGeneric(dir, desc, ignite));
 
                 var elapsed = sw.Elapsed;
 
