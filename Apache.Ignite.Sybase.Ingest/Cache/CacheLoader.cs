@@ -54,7 +54,17 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 {
                     IpFinder = new TcpDiscoveryStaticIpFinder
                     {
-                        Endpoints = new[] {"127.0.0.1:47500..47501"}
+                        // Endpoints = new[] {"127.0.0.1:47500..47501"}
+                        Endpoints = new[]
+                        {
+                            "lpwhdjdnd01.npd.com",
+                            "lpwhdjdnd02.npd.com",
+                            "lpwhdjdnd03.npd.com",
+                            "lpwhdjdnd04.npd.com",
+                            "lpwhdjdnd05.npd.com",
+                            "lpwhdjdnd06.npd.com",
+                            "lpwhdjdnd07.npd.com"
+                        }
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
                 },
