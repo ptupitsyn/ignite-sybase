@@ -30,7 +30,7 @@ namespace Apache.Ignite.Sybase.Ingest.Common
 
             if (!File.Exists(fullPath))
             {
-                return (null, null);
+                return (null, fullPath);
             }
 
             var fileStream = File.OpenRead(fullPath);

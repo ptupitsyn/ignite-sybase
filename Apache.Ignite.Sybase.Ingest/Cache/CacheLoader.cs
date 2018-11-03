@@ -20,7 +20,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         public static void LoadFromPath(string dir)
         {
             // TODO: Load only 10 for a quick test.
-            var recordDescriptors = CtrlGenParser.ParseAll(dir).Take(10);
+            var recordDescriptors = CtrlGenParser.ParseAll(dir).ToArray();
 
             var cfg = GetIgniteConfiguration();
             var ignite = Ignition.Start(cfg);
@@ -126,6 +126,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 if (reader == null)
                 {
                     // File does not exist.
+                    log.Error($"Failed to find data file for '{desc.InFile}'. Expected file '{fullPath}' does not exist.");
                     return;
                 }
 
