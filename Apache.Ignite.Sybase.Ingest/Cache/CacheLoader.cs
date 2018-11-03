@@ -11,6 +11,7 @@ using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.NLog;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
+using GridGain.Core;
 using JetBrains.Annotations;
 using NLog;
 
@@ -71,7 +72,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 JvmInitialMemoryMb = 2000,
                 JvmMaxMemoryMb = 3000,
                 ClientMode = true,
-                Logger = new IgniteNLogLogger()
+                Logger = new IgniteNLogLogger(),
+                PluginConfigurations = new[]
+                {
+                    new GridGainPluginConfiguration()
+                }
             };
         }
 
