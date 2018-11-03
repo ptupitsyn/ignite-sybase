@@ -56,7 +56,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
-                log.Info($" * {dataFiles.Count} data files loaded: {JsonConvert.ToString(dataFiles)}");
+                log.Info($" * {dataFiles.Count} data files loaded: {JsonConvert.ToString(dataFiles.ToArray())}");
             }
         }
 
