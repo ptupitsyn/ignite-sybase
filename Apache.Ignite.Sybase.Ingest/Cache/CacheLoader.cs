@@ -114,44 +114,52 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir)
             where T : ICanReadFromRecordBuffer, new()
         {
-            var sw = Stopwatch.StartNew();
-            long key = 0;
+            var log = LogManager.GetLogger(nameof(LoadCacheGeneric));
 
-            var (reader, fullPath) = desc.GetInFileStream(dir);
-
-            if (reader == null)
+            try
             {
-                // File does not exist.
-                return;
-            }
+                var sw = Stopwatch.StartNew();
+                long key = 0;
 
-            using (reader)
-            {
-                var log = LogManager.GetLogger(nameof(LoadCacheGeneric));
-                log.Info($"Starting {fullPath}...");
+                var (reader, fullPath) = desc.GetInFileStream(dir);
 
-                var cacheName = CreateCacheGeneric<T>(ignite, desc);
-
-                var buffer = new byte[desc.Length];
-
-                using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                if (reader == null)
                 {
-                    while (true)
-                    {
-                        if (!reader.Read(buffer))
-                        {
-                            break;
-                        }
-
-                        var entity = new T();
-                        entity.ReadFromRecordBuffer(buffer);
-
-                        streamer.AddData(key++, entity);
-                    }
+                    // File does not exist.
+                    return;
                 }
 
-                var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                using (reader)
+                {
+                    log.Info($"Starting {fullPath}...");
+
+                    var cacheName = CreateCacheGeneric<T>(ignite, desc);
+
+                    var buffer = new byte[desc.Length];
+
+                    using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                    {
+                        while (true)
+                        {
+                            if (!reader.Read(buffer))
+                            {
+                                break;
+                            }
+
+                            var entity = new T();
+                            entity.ReadFromRecordBuffer(buffer);
+
+                            streamer.AddData(key++, entity);
+                        }
+                    }
+
+                    var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+                    log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e, $"Failed to load {desc.InFile}");
             }
         }
 
