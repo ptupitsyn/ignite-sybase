@@ -3,6 +3,9 @@ using System.Linq;
 using Apache.Ignite.Sybase.Ingest.Cache;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using JetBrains.Annotations;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace Apache.Ignite.Sybase.Ingest
 {
@@ -22,6 +25,7 @@ namespace Apache.Ignite.Sybase.Ingest
             // Record format is defined in *.ctl files AND *.ctrl.gen files
             // Data files are *.dat.gz, and not all of them have ctl, so we should use *.ctrl.gen
 
+            ConfigureLogger();
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
             // Tests.TestReadAllData(dir);
@@ -40,6 +44,19 @@ namespace Apache.Ignite.Sybase.Ingest
             {
                 ModelClassGenerator.GenerateClass(desc);
             }
+        }
+
+        private static void ConfigureLogger()
+        {
+            var config = new LoggingConfiguration();
+
+            var fileTarget = new FileTarget("file") { FileName = "ignite-sybase-loader.log" };
+            var consoleTarget = new ConsoleTarget("console");
+
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, consoleTarget);
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, fileTarget);
+
+            LogManager.Configuration = config;
         }
     }
 }
