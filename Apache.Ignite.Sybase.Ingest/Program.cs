@@ -25,9 +25,9 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
             // Tests.TestReadAllData(dir);
-            GenerateModels(dir);
+            // GenerateModels(dir);
 
-            // CacheLoader.LoadFromPath(dir);
+            CacheLoader.LoadFromPath(dir);
         }
 
         [UsedImplicitly]
