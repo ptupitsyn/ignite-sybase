@@ -17,7 +17,8 @@ namespace Apache.Ignite.Sybase.Ingest.Common
             var fileName = desc.InFile.Split(
                     new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
                     StringSplitOptions.RemoveEmptyEntries)
-                .Last();
+                .Last()
+                .Replace(".ctrl.gen", ".dat");
 
             return Path.Combine(dir, fileName + ".gz");
         }

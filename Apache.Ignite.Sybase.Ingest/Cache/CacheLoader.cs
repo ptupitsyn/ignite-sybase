@@ -31,6 +31,12 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 // A bit of reflection won't hurt once per table.
                 var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
                 var type = Type.GetType(typeName);
+
+                if (type == null)
+                {
+                    throw new Exception("Model class not found: " + typeName);
+                }
+
                 var method = typeof(Program).GetMethod(nameof(LoadCacheGeneric),
                     BindingFlags.Static | BindingFlags.NonPublic);
                 var genericMethod = method.MakeGenericMethod(type);
