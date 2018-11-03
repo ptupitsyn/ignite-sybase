@@ -20,7 +20,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         public static void LoadFromPath(string dir)
         {
             // TODO: Load only 10 for a quick test.
-            var recordDescriptors = GetRecordDescriptors(dir).Take(10);
+            var recordDescriptors = CtrlGenParser.ParseAll(dir).Take(10);
 
             var cfg = GetIgniteConfiguration();
             var ignite = Ignition.Start(cfg);
@@ -50,16 +50,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             Console.WriteLine($" * {totalItems} cache entries");
             Console.WriteLine($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
             Console.ReadKey();
-        }
-
-        private static RecordDescriptor[] GetRecordDescriptors(string dir)
-        {
-            var ctlFiles = Directory.GetFiles(dir, "*.ctrl.gen");
-
-            return ctlFiles
-                .Select(CtrlGenParser.Parse)
-                .Where(t => t != null)
-                .ToArray();
         }
 
         private static IgniteConfiguration GetIgniteConfiguration()

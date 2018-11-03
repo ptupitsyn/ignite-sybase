@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CsvHelper;
@@ -9,9 +10,16 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
     /// <summary>
     /// Parses ctrl.gen files.
     /// </summary>
-    public class CtrlGenParser
+    public static class CtrlGenParser
     {
-        public static RecordDescriptor Parse(string path)
+        public static IEnumerable<RecordDescriptor> ParseAll(string dir)
+        {
+            var ctlFiles = Directory.GetFiles(dir, "*.ctrl.gen");
+
+            return ctlFiles.Select(Parse);
+        }
+
+        private static RecordDescriptor Parse(string path)
         {
             using (var reader = File.OpenText(path))
             using (var csvReader = new CsvReader(reader))
@@ -56,7 +64,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
             new RecordField(arg.column_name, arg.column_data_type, arg.start_position, arg.end_position);
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-        private class CtrlGenParserRecord
+        private static class CtrlGenParserRecord
         {
             // ReSharper disable InconsistentNaming
             public string column_name { get; set; }
