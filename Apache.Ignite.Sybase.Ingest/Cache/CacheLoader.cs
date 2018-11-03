@@ -11,6 +11,7 @@ using Apache.Ignite.Core.Discovery.Tcp.Static;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using JetBrains.Annotations;
+using NLog;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
@@ -33,12 +34,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var cacheNames = ignite.GetCacheNames();
             var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
 
-            Console.WriteLine("\n==========================");
-            Console.WriteLine("Loading complete:");
-            Console.WriteLine($" * {cacheNames.Count} caches");
-            Console.WriteLine($" * {totalItems} cache entries");
-            Console.WriteLine($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
-            Console.ReadKey();
+            var log = LogManager.GetLogger(nameof(LoadFromPath));
+            log.Info("Loading complete:");
+            log.Info($" * {cacheNames.Count} caches");
+            log.Info($" * {totalItems} cache entries");
+            log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
         }
 
         private static IgniteConfiguration GetIgniteConfiguration()
@@ -127,7 +127,9 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             using (reader)
             {
-                Console.WriteLine(fullPath);
+                var log = LogManager.GetLogger(nameof(LoadCacheGeneric));
+                log.Info($"Starting {fullPath}...");
+
                 var cacheName = CreateCacheGeneric<T>(ignite, desc);
 
                 var buffer = new byte[desc.Length];
@@ -149,7 +151,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 }
 
                 var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
             }
         }
 
