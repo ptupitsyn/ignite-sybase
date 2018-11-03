@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Binary;
@@ -23,6 +24,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     public static class CacheLoader
     {
         private static DateTime _loadStartTime = DateTime.Now;
+        private static long _key;
 
         public static void LoadFromPath(string dir)
         {
@@ -40,11 +42,15 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 _loadStartTime = DateTime.Now;
                 var dataFiles = new ConcurrentBag<DataFileInfo>();
 
+                var descsAndFiles = recordDescriptors
+                    .SelectMany(d => d.GetDataFilePaths(dir).Select(p => (Desc: d, Path: p)))
+                    .ToArray();
+
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
-                    recordDescriptors,
-                    new ParallelOptions {MaxDegreeOfParallelism = 6},
-                    desc => InvokeLoadCacheGeneric(dir, desc, ignite, dataFiles));
+                    descsAndFiles,
+                    new ParallelOptions {MaxDegreeOfParallelism = 40},
+                    descAndFile => InvokeLoadCacheGeneric(descAndFile.Desc, descAndFile.Path, ignite, dataFiles));
 
                 var elapsed = sw.Elapsed;
 
@@ -126,7 +132,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         /// <see cref="ICanReadFromRecordBuffer"/> is the most efficient way to decode source data.
         /// <see cref="IBinarizable"/> is the most efficient way to pass data to Ignite.
         /// </summary>
-        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir,
+        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dataFilePath,
             ConcurrentBag<DataFileInfo> dataFiles)
             where T : ICanReadFromRecordBuffer, new()
         {
@@ -134,16 +140,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             try
             {
-                var sw = Stopwatch.StartNew();
-                long key = 0;
-
-                var paths = desc.GetDataFilePaths(dir);
-
-                if (!paths.Any())
-                {
-                    log.Error($"Failed to find data files for '{desc.InFile}' in directory '{dir}'.");
-                }
-
                 var cache = ignite.GetCache<long, T>(desc.TableName);
                 if (cache.GetSize() > 0)
                 {
@@ -153,43 +149,37 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 {
-                    Parallel.ForEach(paths, new ParallelOptions {MaxDegreeOfParallelism = 6}, dataFilePath =>
+                    log.Info($"Starting {dataFilePath}...");
+                    var entryCount = 0;
+
+                    using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                     {
-                        log.Info($"Starting {dataFilePath}...");
-                        var entryCount = 0;
+                        var buffer = new byte[desc.Length];
 
-                        using (var reader = desc.GetBinaryRecordReader(dataFilePath))
+                        while (reader.Read(buffer))
                         {
-                            var buffer = new byte[desc.Length];
+                            var entity = new T();
+                            entity.ReadFromRecordBuffer(buffer);
 
-                            while (reader.Read(buffer))
-                            {
-                                var entity = new T();
-                                entity.ReadFromRecordBuffer(buffer);
-
-                                // ReSharper disable once AccessToDisposedClosure (not an issue).
-                                streamer.AddData(key++, entity);
-                                entryCount++;
-                            }
+                            // ReSharper disable once AccessToDisposedClosure (not an issue).
+                            var key = Interlocked.Increment(ref _key);
+                            streamer.AddData(key, entity);
+                            entryCount++;
                         }
+                    }
 
-                        var dataFileInfo = new DataFileInfo(
-                            dataFilePath,
-                            new FileInfo(dataFilePath).Length,
-                            (long) entryCount * desc.Length,
-                            entryCount);
-                        dataFiles.Add(dataFileInfo);
+                    dataFiles.Add(new DataFileInfo(
+                        dataFilePath,
+                        new FileInfo(dataFilePath).Length,
+                        (long) entryCount * desc.Length,
+                        entryCount));
 
-                        var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
-                        var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
-                        var time = DateTime.Now - _loadStartTime;
-                        var rate = totalSizeGb * 1024 / time.TotalSeconds;
-                        log.Info($" * Loaded so far: {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw, {rate} MiB/s");
-                    });
+                    var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
+                    var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
+                    var time = DateTime.Now - _loadStartTime;
+                    var rate = totalSizeGb * 1024 / time.TotalSeconds;
+                    log.Info($" * Loaded so far: {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw, {rate} MiB/s");
                 }
-
-                var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                log.Info($"Cache '{cache.Name}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
             }
             catch (Exception e)
             {
@@ -197,7 +187,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
         }
 
-        private static void InvokeLoadCacheGeneric(string dir, RecordDescriptor desc, IIgnite ignite,
+        private static void InvokeLoadCacheGeneric(RecordDescriptor desc, string dir, IIgnite ignite,
             ConcurrentBag<DataFileInfo> dataFiles)
         {
             // A bit of reflection won't hurt once per table.
