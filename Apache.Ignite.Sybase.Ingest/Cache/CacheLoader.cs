@@ -50,7 +50,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
                     descsAndFiles,
-                    new ParallelOptions {MaxDegreeOfParallelism = 30},
+                    new ParallelOptions {MaxDegreeOfParallelism = 20},
                     descAndFile => InvokeLoadCacheGeneric(descAndFile.Desc, descAndFile.Path, ignite, dataFiles));
 
                 var elapsed = sw.Elapsed;
@@ -147,17 +147,33 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                 {
-                    var buffer = new byte[desc.Length];
+                    var sync = new object();
 
-                    while (reader.Read(buffer))
+                    // Decode in parallel.
+                    Parallel.For(1, 5, _ =>
                     {
-                        var entity = new T();
-                        entity.ReadFromRecordBuffer(buffer);
+                        var buffer = new byte[desc.Length];
 
-                        var key = Interlocked.Increment(ref _key);
-                        streamer.AddData(key, entity);
-                        entryCount++;
-                    }
+                        while (true)
+                        {
+                            lock (sync)
+                            {
+                                // ReSharper disable once AccessToDisposedClosure
+                                if (!reader.Read(buffer))
+                                {
+                                    return;
+                                }
+                            }
+
+                            var entity = new T();
+                            entity.ReadFromRecordBuffer(buffer);
+
+                            Interlocked.Increment(ref entryCount);
+
+                            // ReSharper disable once AccessToDisposedClosure
+                            streamer.AddData(Interlocked.Increment(ref _key), entity);
+                        }
+                    });
                 }
 
                 dataFiles.Add(new DataFileInfo(
