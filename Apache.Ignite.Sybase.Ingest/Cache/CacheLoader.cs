@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -27,23 +29,31 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             using (var ignite = Ignition.Start(cfg))
             {
                 var sw = Stopwatch.StartNew();
+                var dataFiles = new ConcurrentBag<DataFileInfo>();
 
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
                     recordDescriptors,
                     new ParallelOptions {MaxDegreeOfParallelism = 40},
-                    desc => InvokeLoadCacheGeneric(dir, desc, ignite));
+                    desc => InvokeLoadCacheGeneric(dir, desc, ignite, dataFiles));
 
                 var elapsed = sw.Elapsed;
 
                 var cacheNames = ignite.GetCacheNames();
                 var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
+                var totalGzippedSizeGb = dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
+                var totalSizeGb = dataFiles.Sum(f => f.Size)  / 1024 / 1024 / 1024;
 
                 var log = LogManager.GetLogger(nameof(LoadFromPath));
                 log.Info("Loading complete:");
                 log.Info($" * {cacheNames.Count} caches");
                 log.Info($" * {totalItems} cache entries");
+                log.Info($" * {totalGzippedSizeGb} GB of data (gzipped)");
+                log.Info($" * {totalSizeGb} GB of data (raw)");
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
+                log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
+                log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
+                log.Info($" * {dataFiles.Count} data files loaded: {string.Join(",", dataFiles.Select(f => f.Path))}");
             }
         }
 
@@ -133,7 +143,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         /// <see cref="ICanReadFromRecordBuffer"/> is the most efficient way to decode source data.
         /// <see cref="IBinarizable"/> is the most efficient way to pass data to Ignite.
         /// </summary>
-        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir)
+        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir, ConcurrentBag<DataFileInfo> dataFiles)
             where T : ICanReadFromRecordBuffer, new()
         {
             var log = LogManager.GetLogger(nameof(LoadCacheGeneric));
@@ -155,6 +165,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 foreach (var dataFilePath in paths)
                 {
                     log.Info($"Starting {dataFilePath}...");
+                    var entryCount = 0;
 
                     using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                     using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
@@ -167,8 +178,16 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             entity.ReadFromRecordBuffer(buffer);
 
                             streamer.AddData(key++, entity);
+                            entryCount++;
                         }
                     }
+
+                    var dataFileInfo = new DataFileInfo(
+                        dataFilePath,
+                        new FileInfo(dataFilePath).Length,
+                        (long) entryCount * desc.Length,
+                        entryCount);
+                    dataFiles.Add(dataFileInfo);
                 }
 
                 var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
@@ -180,7 +199,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
         }
 
-        private static void InvokeLoadCacheGeneric(string dir, RecordDescriptor desc, IIgnite ignite)
+        private static void InvokeLoadCacheGeneric(string dir, RecordDescriptor desc, IIgnite ignite,
+            ConcurrentBag<DataFileInfo> dataFiles)
         {
             // A bit of reflection won't hurt once per table.
             var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
@@ -196,7 +216,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var genericMethod = method.MakeGenericMethod(type);
 
-            genericMethod.Invoke(null, new object[] {ignite, desc, dir});
+            genericMethod.Invoke(null, new object[] {ignite, desc, dir, dataFiles});
         }
 
         private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
@@ -232,6 +252,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             ignite.CreateCache<long, T>(cacheCfg);
 
             return cacheCfg.Name;
+        }
+
+        private class DataFileInfo
+        {
+            public DataFileInfo(string path, long compressedSize, long size, long entries)
+            {
+                Path = path;
+                CompressedSize = compressedSize;
+                Size = size;
+                Entries = entries;
+            }
+
+            public string Path { get; }
+            public long CompressedSize { get; }
+            public long Size { get; }
+            public long Entries { get; }
         }
     }
 }
