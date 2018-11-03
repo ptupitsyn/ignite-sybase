@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Apache.Ignite.Sybase.Ingest.Cache;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using ICSharpCode.SharpZipLib.GZip;
 
@@ -59,6 +60,19 @@ namespace Apache.Ignite.Sybase.Ingest.Common
             var gzipStream = new GZipInputStream(fileStream);
 
             return new BinaryRecordReader(desc, gzipStream);
+        }
+
+        public static Type GetModelType(this RecordDescriptor desc)
+        {
+            var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
+            var type = Type.GetType(typeName);
+
+            if (type == null)
+            {
+                throw new Exception("Model class not found: " + typeName);
+            }
+
+            return type;
         }
 
         public static string ToUpperCamel(this string s)

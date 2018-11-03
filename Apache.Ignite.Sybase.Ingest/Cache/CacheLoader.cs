@@ -24,12 +24,16 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     {
         public static void LoadFromPath(string dir)
         {
-            var recordDescriptors = CtrlGenParser.ParseAll(dir).ToArray();
+            var recordDescriptors = CtrlGenParser.ParseAll(dir)
+                .OrderBy(d => d.InFile)
+                .ToArray();
 
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
             {
                 DeleteCaches(ignite);
+                CreateCaches(recordDescriptors, ignite);
+
                 var sw = Stopwatch.StartNew();
                 var dataFiles = new ConcurrentBag<DataFileInfo>();
 
@@ -58,6 +62,15 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
+            }
+        }
+
+        private static void CreateCaches(RecordDescriptor[] recordDescriptors, IIgnite ignite)
+        {
+            // Create caches sequentially to avoid "too many remaps".
+            foreach (var desc in recordDescriptors)
+            {
+                InvokeCreateCacheGeneric(desc, ignite);
             }
         }
 
@@ -128,7 +141,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     log.Error($"Failed to find data files for '{desc.InFile}' in directory '{dir}'.");
                 }
 
-                var cache = CreateCacheGeneric<T>(ignite, desc);
+                var cache = ignite.GetCache<long, T>(desc.TableName);
                 if (cache.GetSize() > 0)
                 {
                     log.Warn($"Skipping non-empty cache: {cache.Name}");
@@ -179,20 +192,23 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             ConcurrentBag<DataFileInfo> dataFiles)
         {
             // A bit of reflection won't hurt once per table.
-            var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
-            var type = Type.GetType(typeName);
-
-            if (type == null)
-            {
-                throw new Exception("Model class not found: " + typeName);
-            }
-
             var method = typeof(CacheLoader)
                 .GetMethod(nameof(LoadCacheGeneric), BindingFlags.Static | BindingFlags.NonPublic);
 
-            var genericMethod = method.MakeGenericMethod(type);
+            var genericMethod = method.MakeGenericMethod(desc.GetModelType());
 
             genericMethod.Invoke(null, new object[] {ignite, desc, dir, dataFiles});
+        }
+
+        private static void InvokeCreateCacheGeneric(RecordDescriptor desc, IIgnite ignite)
+        {
+            // A bit of reflection won't hurt once per table.
+            var method = typeof(CacheLoader)
+                .GetMethod(nameof(CreateCacheGeneric), BindingFlags.Static | BindingFlags.NonPublic);
+
+            var genericMethod = method.MakeGenericMethod(desc.GetModelType());
+
+            genericMethod.Invoke(null, new object[] {ignite, desc});
         }
 
         private static ICache<long, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
