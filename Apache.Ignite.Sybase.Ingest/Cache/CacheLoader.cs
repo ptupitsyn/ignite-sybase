@@ -22,6 +22,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 {
     public static class CacheLoader
     {
+        private static DateTime _loadStartTime = DateTime.Now;
+
         public static void LoadFromPath(string dir)
         {
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
@@ -35,6 +37,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 CreateCaches(recordDescriptors, ignite);
 
                 var sw = Stopwatch.StartNew();
+                _loadStartTime = DateTime.Now;
                 var dataFiles = new ConcurrentBag<DataFileInfo>();
 
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
@@ -179,7 +182,9 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                         var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
                         var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
-                        log.Info($" * {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw");
+                        var time = DateTime.Now - _loadStartTime;
+                        var rate = totalSizeGb * 1024 / time.TotalSeconds;
+                        log.Info($" * Loaded so far: {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw, {rate} MiB/s");
                     });
                 }
 
