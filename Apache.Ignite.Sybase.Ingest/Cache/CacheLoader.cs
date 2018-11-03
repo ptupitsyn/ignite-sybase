@@ -110,8 +110,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             "lpwhdjdnd06.npd.com",
                             "lpwhdjdnd07.npd.com"
                         }
-                    },
-                    SocketTimeout = TimeSpan.FromSeconds(0.3)
+                    }
                 },
                 JvmInitialMemoryMb = 9000,
                 JvmMaxMemoryMb = 19000,
