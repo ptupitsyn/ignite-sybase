@@ -15,7 +15,6 @@ using Apache.Ignite.NLog;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using GridGain.Core;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NLog;
 
@@ -104,52 +103,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             };
         }
 
-        /// <summary>
-        /// BinaryObject approach does not require model classes, but is less efficient due to dynamic nature.
-        /// </summary>
-        [UsedImplicitly]
-        private static void LoadCacheBinaryObjects(IIgnite ignite, RecordDescriptor desc, string dir)
-        {
-            var sw = Stopwatch.StartNew();
-            long key = 0;
 
-            var (reader, fullPath) = desc.GetInFileStream(dir);
-
-            if (reader == null)
-            {
-                // File does not exist.
-                return;
-            }
-
-            Console.WriteLine(fullPath);
-            var cacheName = CreateCache(ignite, desc);
-
-            using (reader)
-            {
-                var binary = ignite.GetBinary();
-
-                using (var streamer = ignite.GetDataStreamer<long, object>(cacheName).WithKeepBinary<long, object>())
-                {
-                    while (true)
-                    {
-                        var builder = reader.ReadAsBinaryObject(cacheName, binary);
-
-                        if (builder == null)
-                        {
-                            break;
-                        }
-
-                        var binaryObject = builder.Build();
-
-                        // TODO: How do we determine proper primary key?
-                        streamer.AddData(key++, binaryObject);
-                    }
-                }
-            }
-
-            var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
-        }
 
         /// <summary>
         /// Uses model classes to load the cache.
@@ -239,17 +193,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var genericMethod = method.MakeGenericMethod(type);
 
             genericMethod.Invoke(null, new object[] {ignite, desc, dir, dataFiles});
-        }
-
-        private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
-        {
-            // Create new cache (in case when query entities have changed).
-            var cacheCfg = CacheConfigurator.GetQueryCacheConfiguration(desc);
-
-            ignite.DestroyCache(cacheCfg.Name);
-            ignite.CreateCache<long, object>(cacheCfg);
-
-            return cacheCfg.Name;
         }
 
         private static ICache<long, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
