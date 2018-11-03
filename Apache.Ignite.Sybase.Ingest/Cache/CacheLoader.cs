@@ -48,8 +48,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var totalSizeGb = dataFiles.Sum(f => f.Size)  / 1024 / 1024 / 1024;
                 var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
 
+                // TODO: Add stats on Ignite Memory Region size (compare to loaded data size).
                 var log = LogManager.GetLogger(nameof(LoadFromPath));
-                log.Info("Loading complete:");
+                log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
+                log.Info("======= Loading complete ========");
                 log.Info($" * {cacheNames.Count} caches");
                 log.Info($" * {totalItems} cache entries");
                 log.Info($" * {totalGzippedSizeGb} GB of data (gzipped)");
@@ -57,7 +59,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
-                log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
             }
         }
 
