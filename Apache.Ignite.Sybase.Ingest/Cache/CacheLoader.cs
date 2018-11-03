@@ -150,7 +150,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 {
-                    Parallel.ForEach(paths, new ParallelOptions {MaxDegreeOfParallelism = 5}, dataFilePath =>
+                    Parallel.ForEach(paths, new ParallelOptions {MaxDegreeOfParallelism = 10}, dataFilePath =>
                     {
                         log.Info($"Starting {dataFilePath}...");
                         var entryCount = 0;
