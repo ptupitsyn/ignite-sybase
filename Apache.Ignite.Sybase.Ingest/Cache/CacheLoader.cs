@@ -177,8 +177,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             entryCount);
                         dataFiles.Add(dataFileInfo);
 
-                        var totalGzippedSizeGb = dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
-                        var totalSizeGb = dataFiles.Sum(f => f.Size)  / 1024 / 1024 / 1024;
+                        var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
+                        var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
                         log.Info($" * {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw");
                     });
                 }
