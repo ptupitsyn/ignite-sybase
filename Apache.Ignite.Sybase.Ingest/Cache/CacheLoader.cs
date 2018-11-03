@@ -152,11 +152,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     // Decode in parallel.
                     Parallel.For(1, 5, _ =>
                     {
-                        var buffer = new byte[desc.Length];
+                        var buffer = new byte[desc.Length];  // One buffer per thread.
 
                         while (true)
                         {
-                            lock (sync)
+                            lock (sync)  // Reading from file is single-threaded.
                             {
                                 // ReSharper disable once AccessToDisposedClosure
                                 if (!reader.Read(buffer))
