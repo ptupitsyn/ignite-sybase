@@ -15,12 +15,15 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
             switch (typeName)
             {
                 case null:
+                case "string":
                     Type = RecordFieldType.String;
                     break;
                 case "INTEGER(8)":
+                case "integer":
                     Type = RecordFieldType.Long;
                     break;
                 case "DOUBLE":
+                case "real":
                     Type = RecordFieldType.Double;
                     break;
                 default:
