@@ -46,6 +46,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
                 var totalGzippedSizeGb = dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
                 var totalSizeGb = dataFiles.Sum(f => f.Size)  / 1024 / 1024 / 1024;
+                var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
 
                 var log = LogManager.GetLogger(nameof(LoadFromPath));
                 log.Info("Loading complete:");
@@ -56,7 +57,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
-                log.Info($" * {dataFiles.Count} data files loaded: {JsonConvert.ToString(dataFiles.ToArray())}");
+                log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
             }
         }
 
