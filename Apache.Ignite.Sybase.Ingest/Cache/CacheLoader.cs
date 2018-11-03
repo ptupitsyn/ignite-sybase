@@ -141,39 +141,37 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             {
                 var cache = ignite.GetCache<long, T>(desc.TableName);
 
+                log.Info($"Starting {dataFilePath}...");
+                var entryCount = 0;
+
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
+                using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                 {
-                    log.Info($"Starting {dataFilePath}...");
-                    var entryCount = 0;
+                    var buffer = new byte[desc.Length];
 
-                    using (var reader = desc.GetBinaryRecordReader(dataFilePath))
+                    while (reader.Read(buffer))
                     {
-                        var buffer = new byte[desc.Length];
+                        var entity = new T();
+                        entity.ReadFromRecordBuffer(buffer);
 
-                        while (reader.Read(buffer))
-                        {
-                            var entity = new T();
-                            entity.ReadFromRecordBuffer(buffer);
-
-                            // ReSharper disable once AccessToDisposedClosure (not an issue).
-                            var key = Interlocked.Increment(ref _key);
-                            streamer.AddData(key, entity);
-                            entryCount++;
-                        }
+                        // ReSharper disable once AccessToDisposedClosure (not an issue).
+                        var key = Interlocked.Increment(ref _key);
+                        streamer.AddData(key, entity);
+                        entryCount++;
                     }
-
-                    dataFiles.Add(new DataFileInfo(
-                        dataFilePath,
-                        new FileInfo(dataFilePath).Length,
-                        (long) entryCount * desc.Length,
-                        entryCount));
-
-                    var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
-                    var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
-                    var time = DateTime.Now - _loadStartTime;
-                    var rate = totalSizeGb * 1024 / time.TotalSeconds;
-                    log.Info($" * Loaded so far: {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw, {rate} MiB/s");
                 }
+
+                dataFiles.Add(new DataFileInfo(
+                    dataFilePath,
+                    new FileInfo(dataFilePath).Length,
+                    (long) entryCount * desc.Length,
+                    entryCount));
+
+                var totalGzippedSizeGb = (double) dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
+                var totalSizeGb = (double) dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
+                var time = DateTime.Now - _loadStartTime;
+                var rate = totalSizeGb * 1024 / time.TotalSeconds;
+                log.Info($" * Loaded so far: {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw, {rate} MiB/s");
             }
             catch (Exception e)
             {
