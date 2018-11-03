@@ -24,6 +24,7 @@ namespace Apache.Ignite.Sybase.Ingest.Common
 
         public static (BinaryRecordReader Reader, string FullPath) GetInFileStream(this RecordDescriptor desc, string dir)
         {
+            // TODO: Some tables can be in multiple files.
             var fullPath = desc.GetInFilePath(dir);
 
             if (!File.Exists(fullPath))

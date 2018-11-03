@@ -26,27 +26,46 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
                     throw new Exception("Failed to read CSV header, unexpected field count: " + csvReader.Context.RawRecord);
                 }
 
-                // TODO
                 var records = csvReader.GetRecords<CtrlGenParserRecord>().ToArray();
+                if (!records.Any())
+                {
+                    throw new Exception("File appears to have no fields: " + path);
+                }
 
-                Console.WriteLine(records.Length);
 
-                return null;
+                var recordLength = records.Last().end_position;
+                var sumLength = records.Sum(r => r.column_length);
+                if (recordLength != sumLength)
+                {
+                    throw new Exception($"Record length check failed: last field end pos = {recordLength}, " +
+                                        $"sum of field lengths = {sumLength}");
+                }
+
+                var fields = records.Select(GetField).ToArray();
+
+                var tableName = path
+                    .Replace(".ctrl.gen", string.Empty, StringComparison.InvariantCultureIgnoreCase)
+                    .Split(".")
+                    .Last();
+
+                return new RecordDescriptor(recordLength, fields, path, tableName);
             }
         }
 
+        private static RecordField GetField(CtrlGenParserRecord arg) =>
+            new RecordField(arg.column_name, arg.column_data_type, arg.start_position, arg.end_position);
 
-        [UsedImplicitly]
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         private class CtrlGenParserRecord
         {
             // ReSharper disable InconsistentNaming
             public string column_name { get; set; }
             public string column_data_type { get; set; }
-            public string column_length { get; set; }
-            public string scale { get; set; }
-            public string position { get; set; }
-            public string start_position { get; set; }
-            public string end_position { get; set; }
+            public int column_length { get; set; }
+            public int scale { get; set; }
+            public int position { get; set; }
+            public int start_position { get; set; }
+            public int end_position { get; set; }
             // ReSharper restore InconsistentNaming
         }
     }
