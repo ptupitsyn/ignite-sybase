@@ -164,8 +164,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 throw new Exception("Model class not found: " + typeName);
             }
 
-            var method = typeof(Program).GetMethod(nameof(LoadCacheGeneric),
-                BindingFlags.Static | BindingFlags.NonPublic);
+            var method = typeof(CacheLoader)
+                .GetMethod(nameof(LoadCacheGeneric), BindingFlags.Static | BindingFlags.NonPublic);
 
             var genericMethod = method.MakeGenericMethod(type);
 
