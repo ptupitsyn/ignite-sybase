@@ -29,6 +29,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
             {
+                DeleteCaches(ignite);
                 var sw = Stopwatch.StartNew();
                 var dataFiles = new ConcurrentBag<DataFileInfo>();
 
@@ -55,6 +56,14 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
                 log.Info($" * {dataFiles.Count} data files loaded: {string.Join(",", dataFiles.Select(f => f.Path))}");
+            }
+        }
+
+        private static void DeleteCaches(IIgnite ignite)
+        {
+            foreach (var cacheName in ignite.GetCacheNames())
+            {
+                ignite.DestroyCache(cacheName);
             }
         }
 
