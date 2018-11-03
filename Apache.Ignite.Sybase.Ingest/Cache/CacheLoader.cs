@@ -50,7 +50,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
                     descsAndFiles,
-                    new ParallelOptions {MaxDegreeOfParallelism = 40},
+                    new ParallelOptions {MaxDegreeOfParallelism = 30},
                     descAndFile => InvokeLoadCacheGeneric(descAndFile.Desc, descAndFile.Path, ignite, dataFiles));
 
                 var elapsed = sw.Elapsed;
@@ -58,7 +58,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var cacheNames = ignite.GetCacheNames();
                 var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
 
-                // TODO: Add stats on Ignite Memory Region size (compare to loaded data size).
                 var log = LogManager.GetLogger(nameof(LoadFromPath));
                 var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
                 log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
@@ -113,8 +112,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         }
                     }
                 },
-                JvmInitialMemoryMb = 9000,
-                JvmMaxMemoryMb = 19000,
+                JvmInitialMemoryMb = 19000,
+                JvmMaxMemoryMb = 25000,
                 ClientMode = true,
                 Logger = new IgniteNLogLogger(),
                 PluginConfigurations = new[]
@@ -155,7 +154,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         var entity = new T();
                         entity.ReadFromRecordBuffer(buffer);
 
-                        // ReSharper disable once AccessToDisposedClosure (not an issue).
                         var key = Interlocked.Increment(ref _key);
                         streamer.AddData(key, entity);
                         entryCount++;
