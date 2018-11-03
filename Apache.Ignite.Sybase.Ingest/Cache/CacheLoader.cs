@@ -44,6 +44,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 var descsAndFiles = recordDescriptors
                     .SelectMany(d => d.GetDataFilePaths(dir).Select(p => (Desc: d, Path: p)))
+                    .OrderByDescending(d => new FileInfo(d.Path).Length)
                     .ToArray();
 
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
