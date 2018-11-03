@@ -14,18 +14,21 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
 
             switch (typeName)
             {
-                case null:
-                case "string":
+                case null: // ctl
+                case "string": // ctrl.gen
                     Type = RecordFieldType.String;
                     break;
-                case "INTEGER(8)":
-                case "integer":
+
+                case "INTEGER(8)": // ctl
+                case "integer": // ctrl.gen
                     Type = RecordFieldType.Long;
                     break;
-                case "DOUBLE":
-                case "real":
+
+                case "DOUBLE": // ctl
+                case "real": // ctrl.gen
                     Type = RecordFieldType.Double;
                     break;
+
                 default:
                     throw new Exception("Unexpected field type: " + typeName);
             }
