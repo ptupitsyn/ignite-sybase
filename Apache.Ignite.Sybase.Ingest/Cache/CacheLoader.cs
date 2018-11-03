@@ -76,7 +76,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 PluginConfigurations = new[]
                 {
                     new GridGainPluginConfiguration()
-                }
+                },
+                IgniteHome = "/opt/ignite/gridgain-ultimate-fabric-8.4.9"
             };
         }
 
@@ -223,7 +224,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         KeyType = typeof(long),
                         ValueType = typeof(T)
                     }
-                }
+                },
+                EnableStatistics = true
             };
 
             ignite.DestroyCache(cacheCfg.Name);
