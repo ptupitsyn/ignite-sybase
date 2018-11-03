@@ -156,7 +156,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         /// <see cref="ICanReadFromRecordBuffer"/> is the most efficient way to decode source data.
         /// <see cref="IBinarizable"/> is the most efficient way to pass data to Ignite.
         /// </summary>
-        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir, ConcurrentBag<DataFileInfo> dataFiles)
+        private static void LoadCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc, string dir,
+            ConcurrentBag<DataFileInfo> dataFiles)
             where T : ICanReadFromRecordBuffer, new()
         {
             var log = LogManager.GetLogger(nameof(LoadCacheGeneric));
@@ -180,32 +181,35 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     return;
                 }
 
-                foreach (var dataFilePath in paths)
+                using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 {
-                    log.Info($"Starting {dataFilePath}...");
-                    var entryCount = 0;
-
-                    using (var reader = desc.GetBinaryRecordReader(dataFilePath))
-                    using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
+                    Parallel.ForEach(paths, new ParallelOptions {MaxDegreeOfParallelism = 5}, dataFilePath =>
                     {
-                        var buffer = new byte[desc.Length];
+                        log.Info($"Starting {dataFilePath}...");
+                        var entryCount = 0;
 
-                        while (reader.Read(buffer))
+                        using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                         {
-                            var entity = new T();
-                            entity.ReadFromRecordBuffer(buffer);
+                            var buffer = new byte[desc.Length];
 
-                            streamer.AddData(key++, entity);
-                            entryCount++;
+                            while (reader.Read(buffer))
+                            {
+                                var entity = new T();
+                                entity.ReadFromRecordBuffer(buffer);
+
+                                // ReSharper disable once AccessToDisposedClosure (not an issue).
+                                streamer.AddData(key++, entity);
+                                entryCount++;
+                            }
                         }
-                    }
 
-                    var dataFileInfo = new DataFileInfo(
-                        dataFilePath,
-                        new FileInfo(dataFilePath).Length,
-                        (long) entryCount * desc.Length,
-                        entryCount);
-                    dataFiles.Add(dataFileInfo);
+                        var dataFileInfo = new DataFileInfo(
+                            dataFilePath,
+                            new FileInfo(dataFilePath).Length,
+                            (long) entryCount * desc.Length,
+                            entryCount);
+                        dataFiles.Add(dataFileInfo);
+                    });
                 }
 
                 var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
