@@ -162,7 +162,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 }
 
                 var cache = CreateCacheGeneric<T>(ignite, desc);
-                if (cache.GetSize() == 0)
+                if (cache.GetSize() > 0)
                 {
                     log.Warn($"Skipping non-empty cache: {cache.Name}");
                     return;
