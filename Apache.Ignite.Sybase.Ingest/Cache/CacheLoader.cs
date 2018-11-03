@@ -16,6 +16,7 @@ using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using GridGain.Core;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using NLog;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
@@ -36,7 +37,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
                     recordDescriptors,
-                    new ParallelOptions {MaxDegreeOfParallelism = 40},
+                    new ParallelOptions {MaxDegreeOfParallelism = 20},
                     desc => InvokeLoadCacheGeneric(dir, desc, ignite, dataFiles));
 
                 var elapsed = sw.Elapsed;
@@ -55,7 +56,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
-                log.Info($" * {dataFiles.Count} data files loaded: {string.Join("|", dataFiles)}");
+                log.Info($" * {dataFiles.Count} data files loaded: {JsonConvert.ToString(dataFiles)}");
             }
         }
 
