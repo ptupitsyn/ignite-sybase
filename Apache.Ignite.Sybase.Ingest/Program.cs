@@ -26,7 +26,7 @@ namespace Apache.Ignite.Sybase.Ingest
             // Data files are *.dat.gz, and not all of them have ctl, so we should use *.ctrl.gen
 
             ConfigureLogger();
-            var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
+            var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data2"));
 
             // Tests.TestReadAllData(dir);
             // GenerateModels(dir);

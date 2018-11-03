@@ -19,26 +19,27 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     {
         public static void LoadFromPath(string dir)
         {
-            // TODO: Load only 10 for a quick test.
             var recordDescriptors = CtrlGenParser.ParseAll(dir).ToArray();
 
             var cfg = GetIgniteConfiguration();
-            var ignite = Ignition.Start(cfg);
+            using (var ignite = Ignition.Start(cfg))
+            {
+                var sw = Stopwatch.StartNew();
 
-            var sw = Stopwatch.StartNew();
+                // ReSharper disable once AccessToDisposedClosure (not an issue).
+                Parallel.ForEach(recordDescriptors, desc => InvokeLoadCacheGeneric(dir, desc, ignite));
 
-            Parallel.ForEach(recordDescriptors, desc => InvokeLoadCacheGeneric(dir, desc, ignite));
+                var elapsed = sw.Elapsed;
 
-            var elapsed = sw.Elapsed;
+                var cacheNames = ignite.GetCacheNames();
+                var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
 
-            var cacheNames = ignite.GetCacheNames();
-            var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
-
-            var log = LogManager.GetLogger(nameof(LoadFromPath));
-            log.Info("Loading complete:");
-            log.Info($" * {cacheNames.Count} caches");
-            log.Info($" * {totalItems} cache entries");
-            log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
+                var log = LogManager.GetLogger(nameof(LoadFromPath));
+                log.Info("Loading complete:");
+                log.Info($" * {cacheNames.Count} caches");
+                log.Info($" * {totalItems} cache entries");
+                log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
+            }
         }
 
         private static IgniteConfiguration GetIgniteConfiguration()
