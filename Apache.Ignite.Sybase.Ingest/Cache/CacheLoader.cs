@@ -121,41 +121,42 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var sw = Stopwatch.StartNew();
                 long key = 0;
 
-                var (reader, fullPath) = desc.GetInFileStream(dir);
+                var paths = desc.GetDataFilePaths(dir);
 
-                if (reader == null)
+                if (!paths.Any())
                 {
-                    // File does not exist.
-                    log.Error($"Failed to find data file for '{desc.InFile}'. Expected file '{fullPath}' does not exist.");
-                    return;
+                    log.Error($"Failed to find data files for '{desc.InFile}' in directory '{dir}'.");
                 }
 
-                using (reader)
+                foreach (var dataFilePath in paths)
                 {
-                    log.Info($"Starting {fullPath}...");
+                    log.Info($"Starting {dataFilePath}...");
 
-                    var cacheName = CreateCacheGeneric<T>(ignite, desc);
-
-                    var buffer = new byte[desc.Length];
-
-                    using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
+                    using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                     {
-                        while (true)
+                        var cacheName = CreateCacheGeneric<T>(ignite, desc);
+
+                        var buffer = new byte[desc.Length];
+
+                        using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
                         {
-                            if (!reader.Read(buffer))
+                            while (true)
                             {
-                                break;
+                                if (!reader.Read(buffer))
+                                {
+                                    break;
+                                }
+
+                                var entity = new T();
+                                entity.ReadFromRecordBuffer(buffer);
+
+                                streamer.AddData(key++, entity);
                             }
-
-                            var entity = new T();
-                            entity.ReadFromRecordBuffer(buffer);
-
-                            streamer.AddData(key++, entity);
                         }
-                    }
 
-                    var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                    log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                        var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+                        log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                    }
                 }
             }
             catch (Exception e)

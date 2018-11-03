@@ -23,6 +23,20 @@ namespace Apache.Ignite.Sybase.Ingest.Common
             return Path.Combine(dir, fileName + ".gz");
         }
 
+        public static string[] GetDataFilePaths(this RecordDescriptor desc, string dir)
+        {
+            Arg.NotNull(desc, nameof(desc));
+            Arg.NotNullOrWhitespace(dir, nameof(dir));
+
+            var fileName = desc.InFile.Split(
+                    new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
+                    StringSplitOptions.RemoveEmptyEntries)
+                .Last()
+                .Replace(".ctrl.gen", ".*.gz");
+
+            return Directory.GetFiles(dir, fileName);
+        }
+
         public static (BinaryRecordReader Reader, string FullPath) GetInFileStream(this RecordDescriptor desc, string dir)
         {
             // TODO: Some tables can be in multiple files.
@@ -33,11 +47,17 @@ namespace Apache.Ignite.Sybase.Ingest.Common
                 return (null, fullPath);
             }
 
-            var fileStream = File.OpenRead(fullPath);
-            var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);
-            var reader = new BinaryRecordReader(desc, gzipStream);
+            var reader = GetBinaryRecordReader(desc, fullPath);
 
             return (reader, fullPath);
+        }
+
+        public static BinaryRecordReader GetBinaryRecordReader(this RecordDescriptor desc, string fullPath)
+        {
+            var fileStream = File.OpenRead(fullPath);
+            var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);
+
+            return new BinaryRecordReader(desc, gzipStream);
         }
 
         public static string ToUpperCamel(this string s)
