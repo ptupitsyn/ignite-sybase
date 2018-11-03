@@ -197,7 +197,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 }
 
                 var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-                log.Info($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                log.Info($"Cache '{cache.Name}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
             }
             catch (Exception e)
             {
