@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CsvHelper;
+using CsvHelper.Configuration;
 using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest.Parsers
@@ -22,7 +23,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
         private static RecordDescriptor Parse(string path)
         {
             using (var reader = File.OpenText(path))
-            using (var csvReader = new CsvReader(reader))
+            using (var csvReader = new CsvReader(reader, new Configuration{TrimOptions = TrimOptions.Trim}))
             {
                 if (!csvReader.Read() || !csvReader.ReadHeader())
                 {

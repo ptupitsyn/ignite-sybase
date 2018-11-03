@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Apache.Ignite.Sybase.Ingest.Cache;
+using Apache.Ignite.Sybase.Ingest.Parsers;
 using JetBrains.Annotations;
 
 namespace Apache.Ignite.Sybase.Ingest
@@ -24,15 +25,16 @@ namespace Apache.Ignite.Sybase.Ingest
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
             // Tests.TestReadAllData(dir);
-            // GenerateModels(dir);
+            GenerateModels(dir);
 
-            CacheLoader.LoadFromPath(dir);
+            // CacheLoader.LoadFromPath(dir);
         }
 
         [UsedImplicitly]
         private static void GenerateModels(string dir)
         {
-            var recordDescriptors = Tests.GetRecordDescriptors(dir);
+            // var recordDescriptors = Tests.GetRecordDescriptors(dir);
+            var recordDescriptors = CtrlGenParser.ParseAll(dir);
 
             foreach (var desc in recordDescriptors)
             {
