@@ -26,23 +26,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var sw = Stopwatch.StartNew();
 
-            Parallel.ForEach(recordDescriptors, desc =>
-            {
-                // A bit of reflection won't hurt once per table.
-                var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
-                var type = Type.GetType(typeName);
-
-                if (type == null)
-                {
-                    throw new Exception("Model class not found: " + typeName);
-                }
-
-                var method = typeof(Program).GetMethod(nameof(LoadCacheGeneric),
-                    BindingFlags.Static | BindingFlags.NonPublic);
-                var genericMethod = method.MakeGenericMethod(type);
-
-                genericMethod.Invoke(null, new object[] {ignite, desc, dir});
-            });
+            Parallel.ForEach(recordDescriptors, desc => InvokeLoadCacheGeneric(dir, desc, ignite));
 
             var elapsed = sw.Elapsed;
 
@@ -167,6 +151,25 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
             Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+        }
+
+        private static void InvokeLoadCacheGeneric(string dir, RecordDescriptor desc, IIgnite ignite)
+        {
+            // A bit of reflection won't hurt once per table.
+            var typeName = "Apache.Ignite.Sybase.Ingest.Cache." + ModelClassGenerator.GetClassName(desc.TableName);
+            var type = Type.GetType(typeName);
+
+            if (type == null)
+            {
+                throw new Exception("Model class not found: " + typeName);
+            }
+
+            var method = typeof(Program).GetMethod(nameof(LoadCacheGeneric),
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            var genericMethod = method.MakeGenericMethod(type);
+
+            genericMethod.Invoke(null, new object[] {ignite, desc, dir});
         }
 
         private static string CreateCache(IIgnite ignite, RecordDescriptor desc)
