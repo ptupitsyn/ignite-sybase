@@ -125,11 +125,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 return;
             }
 
-            Console.WriteLine(fullPath);
-            var cacheName = CreateCacheGeneric<T>(ignite, desc);
-
             using (reader)
             {
+                Console.WriteLine(fullPath);
+                var cacheName = CreateCacheGeneric<T>(ignite, desc);
+
                 var buffer = new byte[desc.Length];
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cacheName))
@@ -147,10 +147,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         streamer.AddData(key++, entity);
                     }
                 }
-            }
 
-            var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
-            Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+                var itemsPerSecond = key * 1000 / sw.ElapsedMilliseconds;
+                Console.WriteLine($"Cache '{cacheName}' loaded in {sw.Elapsed}. {key} items, {itemsPerSecond} items/sec");
+            }
         }
 
         private static void InvokeLoadCacheGeneric(string dir, RecordDescriptor desc, IIgnite ignite)
