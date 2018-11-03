@@ -55,7 +55,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
                 log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
                 log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
-                log.Info($" * {dataFiles.Count} data files loaded: {string.Join(",", dataFiles.Select(f => f.Path))}");
+                log.Info($" * {dataFiles.Count} data files loaded: {string.Join("|", dataFiles)}");
             }
         }
 
@@ -279,6 +279,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             public long CompressedSize { get; }
             public long Size { get; }
             public long Entries { get; }
+
+            public override string ToString()
+            {
+                return $"{nameof(Path)}: {Path}, {nameof(CompressedSize)}: {CompressedSize}, {nameof(Size)}: {Size}, {nameof(Entries)}: {Entries}";
+            }
         }
     }
 }
