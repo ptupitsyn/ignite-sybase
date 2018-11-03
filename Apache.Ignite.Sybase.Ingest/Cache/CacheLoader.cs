@@ -140,11 +140,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             try
             {
                 var cache = ignite.GetCache<long, T>(desc.TableName);
-                if (cache.GetSize() > 0)
-                {
-                    log.Warn($"Skipping non-empty cache: {cache.Name}");
-                    return;
-                }
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 {
