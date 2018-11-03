@@ -92,8 +92,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     },
                     SocketTimeout = TimeSpan.FromSeconds(0.3)
                 },
-                JvmInitialMemoryMb = 2000,
-                JvmMaxMemoryMb = 3000,
+                JvmInitialMemoryMb = 5000,
+                JvmMaxMemoryMb = 9000,
                 ClientMode = true,
                 Logger = new IgniteNLogLogger(),
                 PluginConfigurations = new[]
