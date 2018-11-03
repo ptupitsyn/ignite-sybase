@@ -280,11 +280,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             public long CompressedSize { get; }
             public long Size { get; }
             public long Entries { get; }
-
-            public override string ToString()
-            {
-                return $"{nameof(Path)}: {Path}, {nameof(CompressedSize)}: {CompressedSize}, {nameof(Size)}: {Size}, {nameof(Entries)}: {Entries}";
-            }
+            public float CompressionRatio => (float) Size / CompressedSize;
         }
     }
 }
