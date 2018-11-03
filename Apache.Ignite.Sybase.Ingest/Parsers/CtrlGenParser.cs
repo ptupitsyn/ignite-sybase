@@ -64,7 +64,7 @@ namespace Apache.Ignite.Sybase.Ingest.Parsers
             new RecordField(arg.column_name, arg.column_data_type, arg.start_position, arg.end_position);
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-        private static class CtrlGenParserRecord
+        private class CtrlGenParserRecord
         {
             // ReSharper disable InconsistentNaming
             public string column_name { get; set; }
