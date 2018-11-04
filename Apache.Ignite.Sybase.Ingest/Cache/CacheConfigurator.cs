@@ -26,7 +26,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         ValueTypeName = typeName,
                         Fields = desc.Fields.Select(GetQueryField).ToArray()
                     }
-                }
+                },
+                QueryParallelism = 8
             };
 
             return config;
