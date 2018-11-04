@@ -35,7 +35,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
             {
-                DeleteCaches(ignite);
+                // DeleteCaches(ignite);
                 CreateCaches(recordDescriptors, ignite);
 
                 var sw = Stopwatch.StartNew();
@@ -146,11 +146,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
                 using (var reader = desc.GetBinaryRecordReader(dataFilePath))
+                using (var itemQueue = new BlockingCollection<T>(2000))
                 {
                     var sync = new object();
 
-                    // Decode in parallel.
-                    Parallel.For(1, 5, _ =>
+                    var decoderTasks = Enumerable.Range(1, 2).Select(_ => Task.Factory.StartNew(() =>
                     {
                         var buffer = new byte[desc.Length];  // One buffer per thread.
 
@@ -168,12 +168,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                             var entity = new T();
                             entity.ReadFromRecordBuffer(buffer);
 
-                            Interlocked.Increment(ref entryCount);
-
                             // ReSharper disable once AccessToDisposedClosure
-                            streamer.AddData(Interlocked.Increment(ref _key), entity);
+                            itemQueue.Add(entity);
                         }
-                    });
+                    })).ToArray();
+
+                    // ReSharper disable once AccessToDisposedClosure
+                    Task.WhenAll(decoderTasks).ContinueWith(_ => itemQueue.CompleteAdding());
+
+                    while (!itemQueue.IsCompleted)
+                    {
+                        if (itemQueue.TryTake(out var item))
+                        {
+                            entryCount++;
+                            streamer.AddData(Interlocked.Increment(ref _key), item);
+                        }
+                    }
                 }
 
                 dataFiles.Add(new DataFileInfo(
