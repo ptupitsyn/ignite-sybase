@@ -29,15 +29,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public static void LoadFromPath(string dir)
         {
+            var log = LogManager.GetLogger(nameof(LoadFromPath));
+
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
                 .OrderBy(d => d.InFile)
                 .Where(d => d.TableName.Trim().ToLower() == "fact_data_item_mon")
                 .ToArray();
 
+            log.Info($"Found {recordDescriptors.Length} record descriptors. Starting Ignite...");
+
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
             {
-                DeleteCaches(recordDescriptors, ignite);
+                // log.Info("Ignite started, deleting caches...");
+                // DeleteCaches(recordDescriptors, ignite);
+
+                log.Info("Ignite started, creating caches...");
                 CreateCaches(recordDescriptors, ignite);
 
                 var sw = Stopwatch.StartNew();
@@ -60,7 +67,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var cacheNames = ignite.GetCacheNames();
                 var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
 
-                var log = LogManager.GetLogger(nameof(LoadFromPath));
                 var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
                 log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
                 log.Info("======= Loading complete ========");
