@@ -31,12 +31,13 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         {
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
                 .OrderBy(d => d.InFile)
+                .Where(d => d.TableName.Trim().ToLower() == "fact_data_item_mon")
                 .ToArray();
 
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
             {
-                // DeleteCaches(ignite);
+                DeleteCaches(recordDescriptors, ignite);
                 CreateCaches(recordDescriptors, ignite);
 
                 var sw = Stopwatch.StartNew();
@@ -84,11 +85,14 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             }
         }
 
-        private static void DeleteCaches(IIgnite ignite)
+        private static void DeleteCaches(RecordDescriptor[] recordDescriptors, IIgnite ignite)
         {
             foreach (var cacheName in ignite.GetCacheNames())
             {
-                ignite.DestroyCache(cacheName);
+                if (recordDescriptors.Any(d => d.TableName == cacheName))
+                {
+                    ignite.DestroyCache(cacheName);
+                }
             }
         }
 
