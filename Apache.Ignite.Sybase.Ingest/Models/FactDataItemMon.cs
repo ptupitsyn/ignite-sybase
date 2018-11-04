@@ -8,7 +8,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     public class FactDataItemMon : IBinarizable, ICanReadFromRecordBuffer
     {
         [QuerySqlField(Name = "ppweek")] public long Ppweek { get; set; }
-        [QuerySqlField(Name = "ppmonth")] public long Ppmonth { get; set; }
+        [QuerySqlField(Name = "ppmonth", IsIndexed = true)] public long Ppmonth { get; set; }
         [QuerySqlField(Name = "country")] public long Country { get; set; }
         [QuerySqlField(Name = "itemid")] public long Itemid { get; set; }
         [QuerySqlField(Name = "loadid")] public long Loadid { get; set; }
@@ -26,10 +26,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         [QuerySqlField(Name = "wearersize")] public long Wearersize { get; set; }
         [QuerySqlField(Name = "retailerregion")] public long Retailerregion { get; set; }
         [QuerySqlField(Name = "wearersegment")] public long Wearersegment { get; set; }
-        [QuerySqlField(Name = "wearergender")] public long Wearergender { get; set; }
+        [QuerySqlField(Name = "wearergender", IsIndexed = true)] public long Wearergender { get; set; }
         [QuerySqlField(Name = "superchannel")] public long Superchannel { get; set; }
-        [QuerySqlField(Name = "supercategory")] public long Supercategory { get; set; }
-        [QuerySqlField(Name = "subclass")] public long Subclass { get; set; }
+        [QuerySqlField(Name = "supercategory", IsIndexed = true)] public long Supercategory { get; set; }
+        [QuerySqlField(Name = "subclass", IsIndexed = true)] public long Subclass { get; set; }
         [QuerySqlField(Name = "outletfamily")] public long Outletfamily { get; set; }
         [QuerySqlField(Name = "outlet")] public long Outlet { get; set; }
         [QuerySqlField(Name = "subchannel")] public long Subchannel { get; set; }
@@ -38,7 +38,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         [QuerySqlField(Name = "class")] public long Class { get; set; }
         [QuerySqlField(Name = "channel")] public long Channel { get; set; }
         [QuerySqlField(Name = "categorytype")] public long Categorytype { get; set; }
-        [QuerySqlField(Name = "category")] public long Category { get; set; }
+        [QuerySqlField(Name = "category", IsIndexed = true)] public long Category { get; set; }
         [QuerySqlField(Name = "brandtype")] public long Brandtype { get; set; }
         [QuerySqlField(Name = "brandfamily")] public long Brandfamily { get; set; }
         [QuerySqlField(Name = "brand")] public long Brand { get; set; }
