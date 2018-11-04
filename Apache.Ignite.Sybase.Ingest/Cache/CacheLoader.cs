@@ -16,6 +16,7 @@ using Apache.Ignite.NLog;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 using GridGain.Core;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NLog;
 
@@ -241,12 +242,14 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         ValueType = typeof(T)
                     }
                 },
-                EnableStatistics = true
+                EnableStatistics = true,
+                QueryParallelism = 8
             };
 
             return ignite.GetOrCreateCache<long, T>(cacheCfg);
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
         private class DataFileInfo
         {
             public DataFileInfo(string path, long compressedSize, long size, long entries)
