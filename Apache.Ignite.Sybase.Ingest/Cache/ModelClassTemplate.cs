@@ -11,12 +11,12 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(FieldTemplate), FieldTemplate);
+            writer.WriteString("SQL_NAME", FieldTemplate);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            FieldTemplate = reader.ReadString(nameof(FieldTemplate));
+            FieldTemplate = reader.ReadString("SQL_NAME");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

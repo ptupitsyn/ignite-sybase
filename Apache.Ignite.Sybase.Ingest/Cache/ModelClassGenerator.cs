@@ -61,6 +61,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     {
                         yield return line
                             .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
+                            .Replace("SQL_NAME", field.Name)
                             .Replace("WriteString", field.Type.GetWriteMethodName());
                     }
                 }
@@ -70,6 +71,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     {
                         yield return line
                             .Replace(nameof(ModelClassTemplate.FieldTemplate), GetPropertyName(field.Name))
+                            .Replace("SQL_NAME", field.Name)
                             .Replace("ReadString", field.Type.GetReadMethodName());
                     }
                 }
