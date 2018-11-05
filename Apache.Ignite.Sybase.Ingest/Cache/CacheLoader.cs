@@ -269,7 +269,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     }
                 },
                 EnableStatistics = true,
-                QueryParallelism = cacheMode == CacheMode.Partitioned ? 8 : 1,
+                QueryParallelism = cacheMode == CacheMode.Partitioned ? 4 : 1,
                 CacheMode = cacheMode
             };
 
