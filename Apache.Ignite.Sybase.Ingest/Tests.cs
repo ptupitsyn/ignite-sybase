@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Apache.Ignite.Sybase.Ingest.Cache;
 using Apache.Ignite.Sybase.Ingest.Common;
 using Apache.Ignite.Sybase.Ingest.Parsers;
 
@@ -52,6 +53,28 @@ namespace Apache.Ignite.Sybase.Ingest
                 .Distinct();
 
             Console.WriteLine(string.Join("\n", dataTypes));
+        }
+
+        public static void TestReadFactPostdataMon(string dir)
+        {
+            var recordDescriptor = GetRecordDescriptors(dir).Single(d => d.TableName == "fact_posdata_mon");
+            var path = recordDescriptor.GetDataFilePaths(dir).First();
+
+            using (var reader = recordDescriptor.GetBinaryRecordReader(path))
+            {
+                var buf = new byte[recordDescriptor.Length];
+
+                // Read top 3 records for demo.
+                for (var i = 0; i < 3; i++)
+                {
+                    reader.Read(buf);
+
+                    var model = new FactPosdataMon();
+                    model.ReadFromRecordBuffer(buf);
+
+                    Console.WriteLine(model);
+                }
+            }
         }
 
         public static void TestReadAllData(string dir)

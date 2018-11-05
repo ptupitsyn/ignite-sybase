@@ -28,7 +28,7 @@ namespace Apache.Ignite.Sybase.Ingest
             ConfigureLogger();
             var dir = Path.GetFullPath(args?.FirstOrDefault() ?? Path.Combine("..", "..", "data"));
 
-            // Tests.TestReadAllData(dir);
+            Tests.TestReadFactPostdataMon(dir);
             // GenerateModels(dir);
 
             CacheLoader.LoadFromPath(dir);
