@@ -57,7 +57,11 @@ namespace Apache.Ignite.Sybase.Ingest
 
         public static void TestReadFactPostdataMon(string dir)
         {
-            var recordDescriptor = GetRecordDescriptors(dir).Single(d => d.TableName == "fact_posdata_mon");
+            var recordDescriptors = CtrlGenParser.ParseAll(dir)
+                .OrderBy(d => d.InFile)
+                .ToArray();
+
+            var recordDescriptor = recordDescriptors.Single(d => d.TableName.EndsWith("fact_posdata_mon"));
             var path = recordDescriptor.GetDataFilePaths(dir).First();
 
             using (var reader = recordDescriptor.GetBinaryRecordReader(path))

@@ -31,7 +31,7 @@ namespace Apache.Ignite.Sybase.Ingest
             Tests.TestReadFactPostdataMon(dir);
             // GenerateModels(dir);
 
-            CacheLoader.LoadFromPath(dir);
+            // CacheLoader.LoadFromPath(dir);
         }
 
         [UsedImplicitly]
