@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,11 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 {
     public static class CacheLoader
     {
+        private static readonly HashSet<string> ReplicatedTables = new HashSet<string>(new[]
+        {
+            "attr_positems_attributes"
+        });
+
         private static DateTime _loadStartTime = DateTime.Now;
         private static long _key;
 
@@ -259,7 +265,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     }
                 },
                 EnableStatistics = true,
-                QueryParallelism = 8
+                QueryParallelism = 8,
+                CacheMode = ReplicatedTables.Contains(desc.TableName)
+                    ? CacheMode.Replicated
+                    : CacheMode.Partitioned
             };
 
             return ignite.GetOrCreateCache<long, T>(cacheCfg);
