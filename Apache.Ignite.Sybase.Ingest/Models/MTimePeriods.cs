@@ -21,32 +21,32 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Ppmonth), Ppmonth);
-            writer.WriteLong(nameof(Ppweek), Ppweek);
-            writer.WriteLong(nameof(Year), Year);
-            writer.WriteLong(nameof(Yearhalf), Yearhalf);
-            writer.WriteLong(nameof(Yearqtr), Yearqtr);
-            writer.WriteString(nameof(YearDesc), YearDesc);
-            writer.WriteString(nameof(YearhalfDesc), YearhalfDesc);
-            writer.WriteString(nameof(YearqtrDesc), YearqtrDesc);
-            writer.WriteLong(nameof(Yearmonth), Yearmonth);
-            writer.WriteString(nameof(YearmonthDesc), YearmonthDesc);
-            writer.WriteString(nameof(YearweekDesc), YearweekDesc);
+            writer.WriteLong("ppmonth", Ppmonth);
+            writer.WriteLong("ppweek", Ppweek);
+            writer.WriteLong("year", Year);
+            writer.WriteLong("yearhalf", Yearhalf);
+            writer.WriteLong("yearqtr", Yearqtr);
+            writer.WriteString("year_desc", YearDesc);
+            writer.WriteString("yearhalf_desc", YearhalfDesc);
+            writer.WriteString("yearqtr_desc", YearqtrDesc);
+            writer.WriteLong("yearmonth", Yearmonth);
+            writer.WriteString("yearmonth_desc", YearmonthDesc);
+            writer.WriteString("yearweek_desc", YearweekDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Ppmonth = reader.ReadLong(nameof(Ppmonth));
-            Ppweek = reader.ReadLong(nameof(Ppweek));
-            Year = reader.ReadLong(nameof(Year));
-            Yearhalf = reader.ReadLong(nameof(Yearhalf));
-            Yearqtr = reader.ReadLong(nameof(Yearqtr));
-            YearDesc = reader.ReadString(nameof(YearDesc));
-            YearhalfDesc = reader.ReadString(nameof(YearhalfDesc));
-            YearqtrDesc = reader.ReadString(nameof(YearqtrDesc));
-            Yearmonth = reader.ReadLong(nameof(Yearmonth));
-            YearmonthDesc = reader.ReadString(nameof(YearmonthDesc));
-            YearweekDesc = reader.ReadString(nameof(YearweekDesc));
+            Ppmonth = reader.ReadLong("ppmonth");
+            Ppweek = reader.ReadLong("ppweek");
+            Year = reader.ReadLong("year");
+            Yearhalf = reader.ReadLong("yearhalf");
+            Yearqtr = reader.ReadLong("yearqtr");
+            YearDesc = reader.ReadString("year_desc");
+            YearhalfDesc = reader.ReadString("yearhalf_desc");
+            YearqtrDesc = reader.ReadString("yearqtr_desc");
+            Yearmonth = reader.ReadLong("yearmonth");
+            YearmonthDesc = reader.ReadString("yearmonth_desc");
+            YearweekDesc = reader.ReadString("yearweek_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

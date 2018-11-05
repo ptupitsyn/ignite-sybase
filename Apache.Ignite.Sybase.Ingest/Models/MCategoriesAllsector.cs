@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Allsector), Allsector);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Allindustry), Allindustry);
+            writer.WriteLong("allsector", Allsector);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("allindustry", Allindustry);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Allsector = reader.ReadLong(nameof(Allsector));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Allindustry = reader.ReadLong(nameof(Allindustry));
+            Allsector = reader.ReadLong("allsector");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Allindustry = reader.ReadLong("allindustry");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

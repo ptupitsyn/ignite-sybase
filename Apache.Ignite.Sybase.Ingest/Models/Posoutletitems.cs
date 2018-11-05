@@ -30,50 +30,50 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(RetailerId), RetailerId);
-            writer.WriteLong(nameof(RetailerItemId), RetailerItemId);
-            writer.WriteLong(nameof(BusinessId), BusinessId);
-            writer.WriteLong(nameof(NpdItemId), NpdItemId);
-            writer.WriteLong(nameof(Itemnumber), Itemnumber);
-            writer.WriteLong(nameof(Status), Status);
-            writer.WriteString(nameof(RetailerItemDesc), RetailerItemDesc);
-            writer.WriteString(nameof(RetailerItemBrand), RetailerItemBrand);
-            writer.WriteString(nameof(RetailerItemDepartment), RetailerItemDepartment);
-            writer.WriteString(nameof(RetailerItemClass), RetailerItemClass);
-            writer.WriteString(nameof(RetailerItemModelNumber), RetailerItemModelNumber);
-            writer.WriteString(nameof(RetailerSku), RetailerSku);
-            writer.WriteString(nameof(RetailerItemDivision), RetailerItemDivision);
-            writer.WriteString(nameof(RetailerItemSubdepartment), RetailerItemSubdepartment);
-            writer.WriteString(nameof(RetailerItemSubclass), RetailerItemSubclass);
-            writer.WriteString(nameof(RetailerItemUpc), RetailerItemUpc);
-            writer.WriteString(nameof(RetailerItemDepartmentName), RetailerItemDepartmentName);
-            writer.WriteString(nameof(RetailerItemClassName), RetailerItemClassName);
-            writer.WriteString(nameof(AddedDate), AddedDate);
-            writer.WriteString(nameof(UpdatedDate), UpdatedDate);
+            writer.WriteLong("retailer_id", RetailerId);
+            writer.WriteLong("retailer_item_id", RetailerItemId);
+            writer.WriteLong("business_id", BusinessId);
+            writer.WriteLong("npd_item_id", NpdItemId);
+            writer.WriteLong("itemnumber", Itemnumber);
+            writer.WriteLong("status", Status);
+            writer.WriteString("retailer_item_desc", RetailerItemDesc);
+            writer.WriteString("retailer_item_brand", RetailerItemBrand);
+            writer.WriteString("retailer_item_department", RetailerItemDepartment);
+            writer.WriteString("retailer_item_class", RetailerItemClass);
+            writer.WriteString("retailer_item_model_number", RetailerItemModelNumber);
+            writer.WriteString("retailer_sku", RetailerSku);
+            writer.WriteString("retailer_item_division", RetailerItemDivision);
+            writer.WriteString("retailer_item_subdepartment", RetailerItemSubdepartment);
+            writer.WriteString("retailer_item_subclass", RetailerItemSubclass);
+            writer.WriteString("retailer_item_upc", RetailerItemUpc);
+            writer.WriteString("retailer_item_department_name", RetailerItemDepartmentName);
+            writer.WriteString("retailer_item_class_name", RetailerItemClassName);
+            writer.WriteString("added_date", AddedDate);
+            writer.WriteString("updated_date", UpdatedDate);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            RetailerId = reader.ReadLong(nameof(RetailerId));
-            RetailerItemId = reader.ReadLong(nameof(RetailerItemId));
-            BusinessId = reader.ReadLong(nameof(BusinessId));
-            NpdItemId = reader.ReadLong(nameof(NpdItemId));
-            Itemnumber = reader.ReadLong(nameof(Itemnumber));
-            Status = reader.ReadLong(nameof(Status));
-            RetailerItemDesc = reader.ReadString(nameof(RetailerItemDesc));
-            RetailerItemBrand = reader.ReadString(nameof(RetailerItemBrand));
-            RetailerItemDepartment = reader.ReadString(nameof(RetailerItemDepartment));
-            RetailerItemClass = reader.ReadString(nameof(RetailerItemClass));
-            RetailerItemModelNumber = reader.ReadString(nameof(RetailerItemModelNumber));
-            RetailerSku = reader.ReadString(nameof(RetailerSku));
-            RetailerItemDivision = reader.ReadString(nameof(RetailerItemDivision));
-            RetailerItemSubdepartment = reader.ReadString(nameof(RetailerItemSubdepartment));
-            RetailerItemSubclass = reader.ReadString(nameof(RetailerItemSubclass));
-            RetailerItemUpc = reader.ReadString(nameof(RetailerItemUpc));
-            RetailerItemDepartmentName = reader.ReadString(nameof(RetailerItemDepartmentName));
-            RetailerItemClassName = reader.ReadString(nameof(RetailerItemClassName));
-            AddedDate = reader.ReadString(nameof(AddedDate));
-            UpdatedDate = reader.ReadString(nameof(UpdatedDate));
+            RetailerId = reader.ReadLong("retailer_id");
+            RetailerItemId = reader.ReadLong("retailer_item_id");
+            BusinessId = reader.ReadLong("business_id");
+            NpdItemId = reader.ReadLong("npd_item_id");
+            Itemnumber = reader.ReadLong("itemnumber");
+            Status = reader.ReadLong("status");
+            RetailerItemDesc = reader.ReadString("retailer_item_desc");
+            RetailerItemBrand = reader.ReadString("retailer_item_brand");
+            RetailerItemDepartment = reader.ReadString("retailer_item_department");
+            RetailerItemClass = reader.ReadString("retailer_item_class");
+            RetailerItemModelNumber = reader.ReadString("retailer_item_model_number");
+            RetailerSku = reader.ReadString("retailer_sku");
+            RetailerItemDivision = reader.ReadString("retailer_item_division");
+            RetailerItemSubdepartment = reader.ReadString("retailer_item_subdepartment");
+            RetailerItemSubclass = reader.ReadString("retailer_item_subclass");
+            RetailerItemUpc = reader.ReadString("retailer_item_upc");
+            RetailerItemDepartmentName = reader.ReadString("retailer_item_department_name");
+            RetailerItemClassName = reader.ReadString("retailer_item_class_name");
+            AddedDate = reader.ReadString("added_date");
+            UpdatedDate = reader.ReadString("updated_date");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

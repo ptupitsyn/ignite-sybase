@@ -22,34 +22,34 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Rethidsubcategoryderived), Rethidsubcategoryderived);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Retsubcategoryderived), Retsubcategoryderived);
-            writer.WriteLong(nameof(Retcategoryderived), Retcategoryderived);
-            writer.WriteLong(nameof(Retcategorygroupderived), Retcategorygroupderived);
-            writer.WriteLong(nameof(Retsupercategoryderived), Retsupercategoryderived);
-            writer.WriteLong(nameof(Altbusiness), Altbusiness);
+            writer.WriteLong("rethidsubcategoryderived", Rethidsubcategoryderived);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("retsubcategoryderived", Retsubcategoryderived);
+            writer.WriteLong("retcategoryderived", Retcategoryderived);
+            writer.WriteLong("retcategorygroupderived", Retcategorygroupderived);
+            writer.WriteLong("retsupercategoryderived", Retsupercategoryderived);
+            writer.WriteLong("altbusiness", Altbusiness);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Rethidsubcategoryderived = reader.ReadLong(nameof(Rethidsubcategoryderived));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Retsubcategoryderived = reader.ReadLong(nameof(Retsubcategoryderived));
-            Retcategoryderived = reader.ReadLong(nameof(Retcategoryderived));
-            Retcategorygroupderived = reader.ReadLong(nameof(Retcategorygroupderived));
-            Retsupercategoryderived = reader.ReadLong(nameof(Retsupercategoryderived));
-            Altbusiness = reader.ReadLong(nameof(Altbusiness));
+            Rethidsubcategoryderived = reader.ReadLong("rethidsubcategoryderived");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Retsubcategoryderived = reader.ReadLong("retsubcategoryderived");
+            Retcategoryderived = reader.ReadLong("retcategoryderived");
+            Retcategorygroupderived = reader.ReadLong("retcategorygroupderived");
+            Retsupercategoryderived = reader.ReadLong("retsupercategoryderived");
+            Altbusiness = reader.ReadLong("altbusiness");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

@@ -29,48 +29,48 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(Codeset), Codeset);
-            writer.WriteLong(nameof(BusinessId), BusinessId);
-            writer.WriteLong(nameof(SortOrder), SortOrder);
-            writer.WriteString(nameof(Abbreviation), Abbreviation);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteString(nameof(PvName), PvName);
-            writer.WriteLong(nameof(DerivedCodeset), DerivedCodeset);
-            writer.WriteLong(nameof(DerivedCodeviewsUpdate), DerivedCodeviewsUpdate);
-            writer.WriteLong(nameof(DerivedMapcodesUpdate), DerivedMapcodesUpdate);
-            writer.WriteLong(nameof(InternalCodeset), InternalCodeset);
-            writer.WriteString(nameof(CodesetType), CodesetType);
-            writer.WriteString(nameof(FldType), FldType);
-            writer.WriteLong(nameof(FldNumber), FldNumber);
-            writer.WriteLong(nameof(MultichoiceWidth), MultichoiceWidth);
-            writer.WriteLong(nameof(CollapseCodeUsed), CollapseCodeUsed);
-            writer.WriteLong(nameof(UserDefined), UserDefined);
-            writer.WriteLong(nameof(ExtendedCodeset), ExtendedCodeset);
-            writer.WriteLong(nameof(EquivalencyCodeset), EquivalencyCodeset);
+            writer.WriteString("codeset", Codeset);
+            writer.WriteLong("business_id", BusinessId);
+            writer.WriteLong("sort_order", SortOrder);
+            writer.WriteString("abbreviation", Abbreviation);
+            writer.WriteString("name", Name);
+            writer.WriteString("description", Description);
+            writer.WriteString("pv_name", PvName);
+            writer.WriteLong("derived_codeset", DerivedCodeset);
+            writer.WriteLong("derived_codeviews_update", DerivedCodeviewsUpdate);
+            writer.WriteLong("derived_mapcodes_update", DerivedMapcodesUpdate);
+            writer.WriteLong("internal_codeset", InternalCodeset);
+            writer.WriteString("codeset_type", CodesetType);
+            writer.WriteString("fld_type", FldType);
+            writer.WriteLong("fld_number", FldNumber);
+            writer.WriteLong("multichoice_width", MultichoiceWidth);
+            writer.WriteLong("collapse_code_used", CollapseCodeUsed);
+            writer.WriteLong("user_defined", UserDefined);
+            writer.WriteLong("extended_codeset", ExtendedCodeset);
+            writer.WriteLong("equivalency_codeset", EquivalencyCodeset);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Codeset = reader.ReadString(nameof(Codeset));
-            BusinessId = reader.ReadLong(nameof(BusinessId));
-            SortOrder = reader.ReadLong(nameof(SortOrder));
-            Abbreviation = reader.ReadString(nameof(Abbreviation));
-            Name = reader.ReadString(nameof(Name));
-            Description = reader.ReadString(nameof(Description));
-            PvName = reader.ReadString(nameof(PvName));
-            DerivedCodeset = reader.ReadLong(nameof(DerivedCodeset));
-            DerivedCodeviewsUpdate = reader.ReadLong(nameof(DerivedCodeviewsUpdate));
-            DerivedMapcodesUpdate = reader.ReadLong(nameof(DerivedMapcodesUpdate));
-            InternalCodeset = reader.ReadLong(nameof(InternalCodeset));
-            CodesetType = reader.ReadString(nameof(CodesetType));
-            FldType = reader.ReadString(nameof(FldType));
-            FldNumber = reader.ReadLong(nameof(FldNumber));
-            MultichoiceWidth = reader.ReadLong(nameof(MultichoiceWidth));
-            CollapseCodeUsed = reader.ReadLong(nameof(CollapseCodeUsed));
-            UserDefined = reader.ReadLong(nameof(UserDefined));
-            ExtendedCodeset = reader.ReadLong(nameof(ExtendedCodeset));
-            EquivalencyCodeset = reader.ReadLong(nameof(EquivalencyCodeset));
+            Codeset = reader.ReadString("codeset");
+            BusinessId = reader.ReadLong("business_id");
+            SortOrder = reader.ReadLong("sort_order");
+            Abbreviation = reader.ReadString("abbreviation");
+            Name = reader.ReadString("name");
+            Description = reader.ReadString("description");
+            PvName = reader.ReadString("pv_name");
+            DerivedCodeset = reader.ReadLong("derived_codeset");
+            DerivedCodeviewsUpdate = reader.ReadLong("derived_codeviews_update");
+            DerivedMapcodesUpdate = reader.ReadLong("derived_mapcodes_update");
+            InternalCodeset = reader.ReadLong("internal_codeset");
+            CodesetType = reader.ReadString("codeset_type");
+            FldType = reader.ReadString("fld_type");
+            FldNumber = reader.ReadLong("fld_number");
+            MultichoiceWidth = reader.ReadLong("multichoice_width");
+            CollapseCodeUsed = reader.ReadLong("collapse_code_used");
+            UserDefined = reader.ReadLong("user_defined");
+            ExtendedCodeset = reader.ReadLong("extended_codeset");
+            EquivalencyCodeset = reader.ReadLong("equivalency_codeset");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

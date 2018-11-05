@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Wearersubtype), Wearersubtype);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Wearertype), Wearertype);
+            writer.WriteLong("wearersubtype", Wearersubtype);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("wearertype", Wearertype);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Wearersubtype = reader.ReadLong(nameof(Wearersubtype));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Wearertype = reader.ReadLong(nameof(Wearertype));
+            Wearersubtype = reader.ReadLong("wearersubtype");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Wearertype = reader.ReadLong("wearertype");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

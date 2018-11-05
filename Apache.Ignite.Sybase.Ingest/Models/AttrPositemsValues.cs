@@ -15,20 +15,20 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Itemid), Itemid);
-            writer.WriteString(nameof(AttributeCodeset), AttributeCodeset);
-            writer.WriteString(nameof(AttributeCodesetName), AttributeCodesetName);
-            writer.WriteLong(nameof(AttributeCode), AttributeCode);
-            writer.WriteString(nameof(AttributeCodeName), AttributeCodeName);
+            writer.WriteLong("itemid", Itemid);
+            writer.WriteString("attribute_codeset", AttributeCodeset);
+            writer.WriteString("attribute_codeset_name", AttributeCodesetName);
+            writer.WriteLong("attribute_code", AttributeCode);
+            writer.WriteString("attribute_code_name", AttributeCodeName);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Itemid = reader.ReadLong(nameof(Itemid));
-            AttributeCodeset = reader.ReadString(nameof(AttributeCodeset));
-            AttributeCodesetName = reader.ReadString(nameof(AttributeCodesetName));
-            AttributeCode = reader.ReadLong(nameof(AttributeCode));
-            AttributeCodeName = reader.ReadString(nameof(AttributeCodeName));
+            Itemid = reader.ReadLong("itemid");
+            AttributeCodeset = reader.ReadString("attribute_codeset");
+            AttributeCodesetName = reader.ReadString("attribute_codeset_name");
+            AttributeCode = reader.ReadLong("attribute_code");
+            AttributeCodeName = reader.ReadString("attribute_code_name");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

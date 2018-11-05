@@ -20,30 +20,30 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Subclass), Subclass);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Class), Class);
-            writer.WriteLong(nameof(Category), Category);
-            writer.WriteLong(nameof(Supercategory), Supercategory);
+            writer.WriteLong("subclass", Subclass);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("class", Class);
+            writer.WriteLong("category", Category);
+            writer.WriteLong("supercategory", Supercategory);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Subclass = reader.ReadLong(nameof(Subclass));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Class = reader.ReadLong(nameof(Class));
-            Category = reader.ReadLong(nameof(Category));
-            Supercategory = reader.ReadLong(nameof(Supercategory));
+            Subclass = reader.ReadLong("subclass");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Class = reader.ReadLong("class");
+            Category = reader.ReadLong("category");
+            Supercategory = reader.ReadLong("supercategory");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

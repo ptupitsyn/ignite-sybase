@@ -20,30 +20,30 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Allsubcategoryderived), Allsubcategoryderived);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Allcategoryderived), Allcategoryderived);
-            writer.WriteLong(nameof(Allsector), Allsector);
-            writer.WriteLong(nameof(Allindustry), Allindustry);
+            writer.WriteLong("allsubcategoryderived", Allsubcategoryderived);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("allcategoryderived", Allcategoryderived);
+            writer.WriteLong("allsector", Allsector);
+            writer.WriteLong("allindustry", Allindustry);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Allsubcategoryderived = reader.ReadLong(nameof(Allsubcategoryderived));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Allcategoryderived = reader.ReadLong(nameof(Allcategoryderived));
-            Allsector = reader.ReadLong(nameof(Allsector));
-            Allindustry = reader.ReadLong(nameof(Allindustry));
+            Allsubcategoryderived = reader.ReadLong("allsubcategoryderived");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Allcategoryderived = reader.ReadLong("allcategoryderived");
+            Allsector = reader.ReadLong("allsector");
+            Allindustry = reader.ReadLong("allindustry");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(AttributeDependentCodeset), AttributeDependentCodeset);
-            writer.WriteString(nameof(AttributeName), AttributeName);
-            writer.WriteLong(nameof(Code), Code);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteString(nameof(Sbname), Sbname);
+            writer.WriteString("attribute_dependent_codeset", AttributeDependentCodeset);
+            writer.WriteString("attribute_name", AttributeName);
+            writer.WriteLong("code", Code);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteString("sbname", Sbname);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            AttributeDependentCodeset = reader.ReadString(nameof(AttributeDependentCodeset));
-            AttributeName = reader.ReadString(nameof(AttributeName));
-            Code = reader.ReadLong(nameof(Code));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Sbname = reader.ReadString(nameof(Sbname));
+            AttributeDependentCodeset = reader.ReadString("attribute_dependent_codeset");
+            AttributeName = reader.ReadString("attribute_name");
+            Code = reader.ReadLong("code");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Sbname = reader.ReadString("sbname");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

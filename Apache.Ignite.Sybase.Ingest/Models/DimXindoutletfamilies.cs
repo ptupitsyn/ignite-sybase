@@ -16,22 +16,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Alloutlet), Alloutlet);
-            writer.WriteString(nameof(AlloutletDesc), AlloutletDesc);
-            writer.WriteLong(nameof(Alloutletderived), Alloutletderived);
-            writer.WriteString(nameof(AlloutletderivedDesc), AlloutletderivedDesc);
-            writer.WriteLong(nameof(Alloutletfamily), Alloutletfamily);
-            writer.WriteString(nameof(AlloutletfamilyDesc), AlloutletfamilyDesc);
+            writer.WriteLong("alloutlet", Alloutlet);
+            writer.WriteString("alloutlet_desc", AlloutletDesc);
+            writer.WriteLong("alloutletderived", Alloutletderived);
+            writer.WriteString("alloutletderived_desc", AlloutletderivedDesc);
+            writer.WriteLong("alloutletfamily", Alloutletfamily);
+            writer.WriteString("alloutletfamily_desc", AlloutletfamilyDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Alloutlet = reader.ReadLong(nameof(Alloutlet));
-            AlloutletDesc = reader.ReadString(nameof(AlloutletDesc));
-            Alloutletderived = reader.ReadLong(nameof(Alloutletderived));
-            AlloutletderivedDesc = reader.ReadString(nameof(AlloutletderivedDesc));
-            Alloutletfamily = reader.ReadLong(nameof(Alloutletfamily));
-            AlloutletfamilyDesc = reader.ReadString(nameof(AlloutletfamilyDesc));
+            Alloutlet = reader.ReadLong("alloutlet");
+            AlloutletDesc = reader.ReadString("alloutlet_desc");
+            Alloutletderived = reader.ReadLong("alloutletderived");
+            AlloutletderivedDesc = reader.ReadString("alloutletderived_desc");
+            Alloutletfamily = reader.ReadLong("alloutletfamily");
+            AlloutletfamilyDesc = reader.ReadString("alloutletfamily_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

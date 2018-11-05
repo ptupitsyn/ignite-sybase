@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Category), Category);
-            writer.WriteString(nameof(CategoryDesc), CategoryDesc);
-            writer.WriteLong(nameof(Class), Class);
-            writer.WriteString(nameof(ClassDesc), ClassDesc);
-            writer.WriteLong(nameof(Subclass), Subclass);
-            writer.WriteString(nameof(SubclassDesc), SubclassDesc);
-            writer.WriteLong(nameof(Supercategory), Supercategory);
-            writer.WriteString(nameof(SupercategoryDesc), SupercategoryDesc);
+            writer.WriteLong("category", Category);
+            writer.WriteString("category_desc", CategoryDesc);
+            writer.WriteLong("class", Class);
+            writer.WriteString("class_desc", ClassDesc);
+            writer.WriteLong("subclass", Subclass);
+            writer.WriteString("subclass_desc", SubclassDesc);
+            writer.WriteLong("supercategory", Supercategory);
+            writer.WriteString("supercategory_desc", SupercategoryDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Category = reader.ReadLong(nameof(Category));
-            CategoryDesc = reader.ReadString(nameof(CategoryDesc));
-            Class = reader.ReadLong(nameof(Class));
-            ClassDesc = reader.ReadString(nameof(ClassDesc));
-            Subclass = reader.ReadLong(nameof(Subclass));
-            SubclassDesc = reader.ReadString(nameof(SubclassDesc));
-            Supercategory = reader.ReadLong(nameof(Supercategory));
-            SupercategoryDesc = reader.ReadString(nameof(SupercategoryDesc));
+            Category = reader.ReadLong("category");
+            CategoryDesc = reader.ReadString("category_desc");
+            Class = reader.ReadLong("class");
+            ClassDesc = reader.ReadString("class_desc");
+            Subclass = reader.ReadLong("subclass");
+            SubclassDesc = reader.ReadString("subclass_desc");
+            Supercategory = reader.ReadLong("supercategory");
+            SupercategoryDesc = reader.ReadString("supercategory_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

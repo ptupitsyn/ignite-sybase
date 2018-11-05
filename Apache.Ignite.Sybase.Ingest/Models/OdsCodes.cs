@@ -23,36 +23,36 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Code), Code);
-            writer.WriteString(nameof(Codeset), Codeset);
-            writer.WriteLong(nameof(BusinessId), BusinessId);
-            writer.WriteLong(nameof(SortOrder), SortOrder);
-            writer.WriteString(nameof(Abbreviation), Abbreviation);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(StartRange), StartRange);
-            writer.WriteLong(nameof(EndRange), EndRange);
-            writer.WriteLong(nameof(MultichoiceIndex), MultichoiceIndex);
-            writer.WriteString(nameof(StandardCode), StandardCode);
-            writer.WriteString(nameof(InternalAbbreviation), InternalAbbreviation);
+            writer.WriteLong("code", Code);
+            writer.WriteString("codeset", Codeset);
+            writer.WriteLong("business_id", BusinessId);
+            writer.WriteLong("sort_order", SortOrder);
+            writer.WriteString("abbreviation", Abbreviation);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteString("name", Name);
+            writer.WriteString("description", Description);
+            writer.WriteLong("start_range", StartRange);
+            writer.WriteLong("end_range", EndRange);
+            writer.WriteLong("multichoice_index", MultichoiceIndex);
+            writer.WriteString("standard_code", StandardCode);
+            writer.WriteString("internal_abbreviation", InternalAbbreviation);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Code = reader.ReadLong(nameof(Code));
-            Codeset = reader.ReadString(nameof(Codeset));
-            BusinessId = reader.ReadLong(nameof(BusinessId));
-            SortOrder = reader.ReadLong(nameof(SortOrder));
-            Abbreviation = reader.ReadString(nameof(Abbreviation));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Name = reader.ReadString(nameof(Name));
-            Description = reader.ReadString(nameof(Description));
-            StartRange = reader.ReadLong(nameof(StartRange));
-            EndRange = reader.ReadLong(nameof(EndRange));
-            MultichoiceIndex = reader.ReadLong(nameof(MultichoiceIndex));
-            StandardCode = reader.ReadString(nameof(StandardCode));
-            InternalAbbreviation = reader.ReadString(nameof(InternalAbbreviation));
+            Code = reader.ReadLong("code");
+            Codeset = reader.ReadString("codeset");
+            BusinessId = reader.ReadLong("business_id");
+            SortOrder = reader.ReadLong("sort_order");
+            Abbreviation = reader.ReadString("abbreviation");
+            Shortname = reader.ReadString("shortname");
+            Name = reader.ReadString("name");
+            Description = reader.ReadString("description");
+            StartRange = reader.ReadLong("start_range");
+            EndRange = reader.ReadLong("end_range");
+            MultichoiceIndex = reader.ReadLong("multichoice_index");
+            StandardCode = reader.ReadString("standard_code");
+            InternalAbbreviation = reader.ReadString("internal_abbreviation");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Wearersegment), Wearersegment);
-            writer.WriteString(nameof(WearersegmentDesc), WearersegmentDesc);
-            writer.WriteLong(nameof(Wearersize), Wearersize);
-            writer.WriteString(nameof(WearersizeDesc), WearersizeDesc);
-            writer.WriteLong(nameof(Wearersubtype), Wearersubtype);
-            writer.WriteString(nameof(WearersubtypeDesc), WearersubtypeDesc);
-            writer.WriteLong(nameof(Wearertype), Wearertype);
-            writer.WriteString(nameof(WearertypeDesc), WearertypeDesc);
+            writer.WriteLong("wearersegment", Wearersegment);
+            writer.WriteString("wearersegment_desc", WearersegmentDesc);
+            writer.WriteLong("wearersize", Wearersize);
+            writer.WriteString("wearersize_desc", WearersizeDesc);
+            writer.WriteLong("wearersubtype", Wearersubtype);
+            writer.WriteString("wearersubtype_desc", WearersubtypeDesc);
+            writer.WriteLong("wearertype", Wearertype);
+            writer.WriteString("wearertype_desc", WearertypeDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Wearersegment = reader.ReadLong(nameof(Wearersegment));
-            WearersegmentDesc = reader.ReadString(nameof(WearersegmentDesc));
-            Wearersize = reader.ReadLong(nameof(Wearersize));
-            WearersizeDesc = reader.ReadString(nameof(WearersizeDesc));
-            Wearersubtype = reader.ReadLong(nameof(Wearersubtype));
-            WearersubtypeDesc = reader.ReadString(nameof(WearersubtypeDesc));
-            Wearertype = reader.ReadLong(nameof(Wearertype));
-            WearertypeDesc = reader.ReadString(nameof(WearertypeDesc));
+            Wearersegment = reader.ReadLong("wearersegment");
+            WearersegmentDesc = reader.ReadString("wearersegment_desc");
+            Wearersize = reader.ReadLong("wearersize");
+            WearersizeDesc = reader.ReadString("wearersize_desc");
+            Wearersubtype = reader.ReadLong("wearersubtype");
+            WearersubtypeDesc = reader.ReadString("wearersubtype_desc");
+            Wearertype = reader.ReadLong("wearertype");
+            WearertypeDesc = reader.ReadString("wearertype_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

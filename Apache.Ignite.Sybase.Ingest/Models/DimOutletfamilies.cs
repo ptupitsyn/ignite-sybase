@@ -14,18 +14,18 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Outlet), Outlet);
-            writer.WriteString(nameof(OutletDesc), OutletDesc);
-            writer.WriteLong(nameof(Outletfamily), Outletfamily);
-            writer.WriteString(nameof(OutletfamilyDesc), OutletfamilyDesc);
+            writer.WriteLong("outlet", Outlet);
+            writer.WriteString("outlet_desc", OutletDesc);
+            writer.WriteLong("outletfamily", Outletfamily);
+            writer.WriteString("outletfamily_desc", OutletfamilyDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Outlet = reader.ReadLong(nameof(Outlet));
-            OutletDesc = reader.ReadString(nameof(OutletDesc));
-            Outletfamily = reader.ReadLong(nameof(Outletfamily));
-            OutletfamilyDesc = reader.ReadString(nameof(OutletfamilyDesc));
+            Outlet = reader.ReadLong("outlet");
+            OutletDesc = reader.ReadString("outlet_desc");
+            Outletfamily = reader.ReadLong("outletfamily");
+            OutletfamilyDesc = reader.ReadString("outletfamily_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

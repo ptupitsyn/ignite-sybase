@@ -20,30 +20,30 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Categorytype), Categorytype);
-            writer.WriteLong(nameof(Class), Class);
-            writer.WriteLong(nameof(Classification), Classification);
-            writer.WriteLong(nameof(Company), Company);
-            writer.WriteLong(nameof(Subclass), Subclass);
-            writer.WriteLong(nameof(Supercategory), Supercategory);
-            writer.WriteLong(nameof(Brand), Brand);
-            writer.WriteLong(nameof(Brandfamily), Brandfamily);
-            writer.WriteLong(nameof(Brandtype), Brandtype);
-            writer.WriteLong(nameof(Category), Category);
+            writer.WriteLong("categorytype", Categorytype);
+            writer.WriteLong("class", Class);
+            writer.WriteLong("classification", Classification);
+            writer.WriteLong("company", Company);
+            writer.WriteLong("subclass", Subclass);
+            writer.WriteLong("supercategory", Supercategory);
+            writer.WriteLong("brand", Brand);
+            writer.WriteLong("brandfamily", Brandfamily);
+            writer.WriteLong("brandtype", Brandtype);
+            writer.WriteLong("category", Category);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Categorytype = reader.ReadLong(nameof(Categorytype));
-            Class = reader.ReadLong(nameof(Class));
-            Classification = reader.ReadLong(nameof(Classification));
-            Company = reader.ReadLong(nameof(Company));
-            Subclass = reader.ReadLong(nameof(Subclass));
-            Supercategory = reader.ReadLong(nameof(Supercategory));
-            Brand = reader.ReadLong(nameof(Brand));
-            Brandfamily = reader.ReadLong(nameof(Brandfamily));
-            Brandtype = reader.ReadLong(nameof(Brandtype));
-            Category = reader.ReadLong(nameof(Category));
+            Categorytype = reader.ReadLong("categorytype");
+            Class = reader.ReadLong("class");
+            Classification = reader.ReadLong("classification");
+            Company = reader.ReadLong("company");
+            Subclass = reader.ReadLong("subclass");
+            Supercategory = reader.ReadLong("supercategory");
+            Brand = reader.ReadLong("brand");
+            Brandfamily = reader.ReadLong("brandfamily");
+            Brandtype = reader.ReadLong("brandtype");
+            Category = reader.ReadLong("category");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

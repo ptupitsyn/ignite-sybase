@@ -13,16 +13,16 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(Postalcode), Postalcode);
-            writer.WriteLong(nameof(Country), Country);
-            writer.WriteLong(nameof(Customgeopopulation), Customgeopopulation);
+            writer.WriteString("postalcode", Postalcode);
+            writer.WriteLong("country", Country);
+            writer.WriteLong("customgeopopulation", Customgeopopulation);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Postalcode = reader.ReadString(nameof(Postalcode));
-            Country = reader.ReadLong(nameof(Country));
-            Customgeopopulation = reader.ReadLong(nameof(Customgeopopulation));
+            Postalcode = reader.ReadString("postalcode");
+            Country = reader.ReadLong("country");
+            Customgeopopulation = reader.ReadLong("customgeopopulation");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

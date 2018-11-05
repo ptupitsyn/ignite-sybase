@@ -16,22 +16,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Allbrand), Allbrand);
-            writer.WriteString(nameof(AllbrandDesc), AllbrandDesc);
-            writer.WriteLong(nameof(Allbrandderived), Allbrandderived);
-            writer.WriteString(nameof(AllbrandderivedDesc), AllbrandderivedDesc);
-            writer.WriteLong(nameof(Allbrandfamily), Allbrandfamily);
-            writer.WriteString(nameof(AllbrandfamilyDesc), AllbrandfamilyDesc);
+            writer.WriteLong("allbrand", Allbrand);
+            writer.WriteString("allbrand_desc", AllbrandDesc);
+            writer.WriteLong("allbrandderived", Allbrandderived);
+            writer.WriteString("allbrandderived_desc", AllbrandderivedDesc);
+            writer.WriteLong("allbrandfamily", Allbrandfamily);
+            writer.WriteString("allbrandfamily_desc", AllbrandfamilyDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Allbrand = reader.ReadLong(nameof(Allbrand));
-            AllbrandDesc = reader.ReadString(nameof(AllbrandDesc));
-            Allbrandderived = reader.ReadLong(nameof(Allbrandderived));
-            AllbrandderivedDesc = reader.ReadString(nameof(AllbrandderivedDesc));
-            Allbrandfamily = reader.ReadLong(nameof(Allbrandfamily));
-            AllbrandfamilyDesc = reader.ReadString(nameof(AllbrandfamilyDesc));
+            Allbrand = reader.ReadLong("allbrand");
+            AllbrandDesc = reader.ReadString("allbrand_desc");
+            Allbrandderived = reader.ReadLong("allbrandderived");
+            AllbrandderivedDesc = reader.ReadString("allbrandderived_desc");
+            Allbrandfamily = reader.ReadLong("allbrandfamily");
+            AllbrandfamilyDesc = reader.ReadString("allbrandfamily_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

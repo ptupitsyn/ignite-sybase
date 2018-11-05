@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(Codeset), Codeset);
-            writer.WriteString(nameof(CodesetName), CodesetName);
-            writer.WriteLong(nameof(Code), Code);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Sbname), Sbname);
+            writer.WriteString("codeset", Codeset);
+            writer.WriteString("codeset_name", CodesetName);
+            writer.WriteLong("code", Code);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteString("name", Name);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("sbname", Sbname);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Codeset = reader.ReadString(nameof(Codeset));
-            CodesetName = reader.ReadString(nameof(CodesetName));
-            Code = reader.ReadLong(nameof(Code));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Name = reader.ReadString(nameof(Name));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Sbname = reader.ReadString(nameof(Sbname));
+            Codeset = reader.ReadString("codeset");
+            CodesetName = reader.ReadString("codeset_name");
+            Code = reader.ReadLong("code");
+            Shortname = reader.ReadString("shortname");
+            Name = reader.ReadString("name");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Sbname = reader.ReadString("sbname");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

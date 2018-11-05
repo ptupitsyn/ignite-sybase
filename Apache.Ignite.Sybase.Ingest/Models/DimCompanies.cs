@@ -16,22 +16,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Brand), Brand);
-            writer.WriteString(nameof(BrandDesc), BrandDesc);
-            writer.WriteLong(nameof(Company), Company);
-            writer.WriteString(nameof(CompanyDesc), CompanyDesc);
-            writer.WriteLong(nameof(Itemnumber), Itemnumber);
-            writer.WriteString(nameof(ItemnumberDesc), ItemnumberDesc);
+            writer.WriteLong("brand", Brand);
+            writer.WriteString("brand_desc", BrandDesc);
+            writer.WriteLong("company", Company);
+            writer.WriteString("company_desc", CompanyDesc);
+            writer.WriteLong("itemnumber", Itemnumber);
+            writer.WriteString("itemnumber_desc", ItemnumberDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Brand = reader.ReadLong(nameof(Brand));
-            BrandDesc = reader.ReadString(nameof(BrandDesc));
-            Company = reader.ReadLong(nameof(Company));
-            CompanyDesc = reader.ReadString(nameof(CompanyDesc));
-            Itemnumber = reader.ReadLong(nameof(Itemnumber));
-            ItemnumberDesc = reader.ReadString(nameof(ItemnumberDesc));
+            Brand = reader.ReadLong("brand");
+            BrandDesc = reader.ReadString("brand_desc");
+            Company = reader.ReadLong("company");
+            CompanyDesc = reader.ReadString("company_desc");
+            Itemnumber = reader.ReadLong("itemnumber");
+            ItemnumberDesc = reader.ReadString("itemnumber_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

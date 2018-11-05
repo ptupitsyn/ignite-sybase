@@ -17,24 +17,24 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Censusdivisionusa), Censusdivisionusa);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
+            writer.WriteLong("censusdivisionusa", Censusdivisionusa);
+            writer.WriteString("description", Description);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteString("name", Name);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Censusdivisionusa = reader.ReadLong(nameof(Censusdivisionusa));
-            Description = reader.ReadString(nameof(Description));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Name = reader.ReadString(nameof(Name));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
+            Censusdivisionusa = reader.ReadLong("censusdivisionusa");
+            Description = reader.ReadString("description");
+            Shortname = reader.ReadString("shortname");
+            Name = reader.ReadString("name");
+            Displayorder = reader.ReadLong("displayorder");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

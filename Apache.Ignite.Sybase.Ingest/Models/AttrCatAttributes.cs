@@ -16,22 +16,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Category), Category);
-            writer.WriteString(nameof(AttributeDependentCodeset), AttributeDependentCodeset);
-            writer.WriteString(nameof(AttributeName), AttributeName);
-            writer.WriteString(nameof(CodesetType), CodesetType);
-            writer.WriteString(nameof(DependentCodeset), DependentCodeset);
-            writer.WriteLong(nameof(Hidden), Hidden);
+            writer.WriteLong("category", Category);
+            writer.WriteString("attribute_dependent_codeset", AttributeDependentCodeset);
+            writer.WriteString("attribute_name", AttributeName);
+            writer.WriteString("codeset_type", CodesetType);
+            writer.WriteString("dependent_codeset", DependentCodeset);
+            writer.WriteLong("hidden", Hidden);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Category = reader.ReadLong(nameof(Category));
-            AttributeDependentCodeset = reader.ReadString(nameof(AttributeDependentCodeset));
-            AttributeName = reader.ReadString(nameof(AttributeName));
-            CodesetType = reader.ReadString(nameof(CodesetType));
-            DependentCodeset = reader.ReadString(nameof(DependentCodeset));
-            Hidden = reader.ReadLong(nameof(Hidden));
+            Category = reader.ReadLong("category");
+            AttributeDependentCodeset = reader.ReadString("attribute_dependent_codeset");
+            AttributeName = reader.ReadString("attribute_name");
+            CodesetType = reader.ReadString("codeset_type");
+            DependentCodeset = reader.ReadString("dependent_codeset");
+            Hidden = reader.ReadLong("hidden");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

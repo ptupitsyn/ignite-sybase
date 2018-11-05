@@ -22,34 +22,34 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Altbusiness), Altbusiness);
-            writer.WriteString(nameof(AltbusinessDesc), AltbusinessDesc);
-            writer.WriteLong(nameof(Retcategoryderived), Retcategoryderived);
-            writer.WriteString(nameof(RetcategoryderivedDesc), RetcategoryderivedDesc);
-            writer.WriteLong(nameof(Retcategorygroupderived), Retcategorygroupderived);
-            writer.WriteString(nameof(RetcategorygroupderivedDesc), RetcategorygroupderivedDesc);
-            writer.WriteLong(nameof(Rethidsubcategoryderived), Rethidsubcategoryderived);
-            writer.WriteString(nameof(RethidsubcategoryderivedDesc), RethidsubcategoryderivedDesc);
-            writer.WriteLong(nameof(Retsubcategoryderived), Retsubcategoryderived);
-            writer.WriteString(nameof(RetsubcategoryderivedDesc), RetsubcategoryderivedDesc);
-            writer.WriteLong(nameof(Retsupercategoryderived), Retsupercategoryderived);
-            writer.WriteString(nameof(RetsupercategoryderivedDesc), RetsupercategoryderivedDesc);
+            writer.WriteLong("altbusiness", Altbusiness);
+            writer.WriteString("altbusiness_desc", AltbusinessDesc);
+            writer.WriteLong("retcategoryderived", Retcategoryderived);
+            writer.WriteString("retcategoryderived_desc", RetcategoryderivedDesc);
+            writer.WriteLong("retcategorygroupderived", Retcategorygroupderived);
+            writer.WriteString("retcategorygroupderived_desc", RetcategorygroupderivedDesc);
+            writer.WriteLong("rethidsubcategoryderived", Rethidsubcategoryderived);
+            writer.WriteString("rethidsubcategoryderived_desc", RethidsubcategoryderivedDesc);
+            writer.WriteLong("retsubcategoryderived", Retsubcategoryderived);
+            writer.WriteString("retsubcategoryderived_desc", RetsubcategoryderivedDesc);
+            writer.WriteLong("retsupercategoryderived", Retsupercategoryderived);
+            writer.WriteString("retsupercategoryderived_desc", RetsupercategoryderivedDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Altbusiness = reader.ReadLong(nameof(Altbusiness));
-            AltbusinessDesc = reader.ReadString(nameof(AltbusinessDesc));
-            Retcategoryderived = reader.ReadLong(nameof(Retcategoryderived));
-            RetcategoryderivedDesc = reader.ReadString(nameof(RetcategoryderivedDesc));
-            Retcategorygroupderived = reader.ReadLong(nameof(Retcategorygroupderived));
-            RetcategorygroupderivedDesc = reader.ReadString(nameof(RetcategorygroupderivedDesc));
-            Rethidsubcategoryderived = reader.ReadLong(nameof(Rethidsubcategoryderived));
-            RethidsubcategoryderivedDesc = reader.ReadString(nameof(RethidsubcategoryderivedDesc));
-            Retsubcategoryderived = reader.ReadLong(nameof(Retsubcategoryderived));
-            RetsubcategoryderivedDesc = reader.ReadString(nameof(RetsubcategoryderivedDesc));
-            Retsupercategoryderived = reader.ReadLong(nameof(Retsupercategoryderived));
-            RetsupercategoryderivedDesc = reader.ReadString(nameof(RetsupercategoryderivedDesc));
+            Altbusiness = reader.ReadLong("altbusiness");
+            AltbusinessDesc = reader.ReadString("altbusiness_desc");
+            Retcategoryderived = reader.ReadLong("retcategoryderived");
+            RetcategoryderivedDesc = reader.ReadString("retcategoryderived_desc");
+            Retcategorygroupderived = reader.ReadLong("retcategorygroupderived");
+            RetcategorygroupderivedDesc = reader.ReadString("retcategorygroupderived_desc");
+            Rethidsubcategoryderived = reader.ReadLong("rethidsubcategoryderived");
+            RethidsubcategoryderivedDesc = reader.ReadString("rethidsubcategoryderived_desc");
+            Retsubcategoryderived = reader.ReadLong("retsubcategoryderived");
+            RetsubcategoryderivedDesc = reader.ReadString("retsubcategoryderived_desc");
+            Retsupercategoryderived = reader.ReadLong("retsupercategoryderived");
+            RetsupercategoryderivedDesc = reader.ReadString("retsupercategoryderived_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

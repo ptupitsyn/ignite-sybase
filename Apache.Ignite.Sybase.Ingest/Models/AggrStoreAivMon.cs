@@ -37,64 +37,64 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Ppmonth), Ppmonth);
-            writer.WriteLong(nameof(Distributor), Distributor);
-            writer.WriteString(nameof(Storeid), Storeid);
-            writer.WriteString(nameof(Postalcode), Postalcode);
-            writer.WriteString(nameof(Outletstoreid), Outletstoreid);
-            writer.WriteLong(nameof(Dma), Dma);
-            writer.WriteLong(nameof(Year), Year);
-            writer.WriteLong(nameof(Yearhalf), Yearhalf);
-            writer.WriteLong(nameof(Yearqtr), Yearqtr);
-            writer.WriteLong(nameof(Yearmonth), Yearmonth);
-            writer.WriteLong(nameof(Outletfamily), Outletfamily);
-            writer.WriteLong(nameof(Channel), Channel);
-            writer.WriteLong(nameof(Superchannel), Superchannel);
-            writer.WriteLong(nameof(Retailerregion), Retailerregion);
-            writer.WriteLong(nameof(Subchannel), Subchannel);
-            writer.WriteLong(nameof(Outlet), Outlet);
-            writer.WriteLong(nameof(State), State);
-            writer.WriteLong(nameof(Censusdivisionusa), Censusdivisionusa);
-            writer.WriteLong(nameof(Censusregionusa), Censusregionusa);
-            writer.WriteDouble(nameof(TotindStoresTotalvalue), TotindStoresTotalvalue);
-            writer.WriteDouble(nameof(StoresTotalvalue), StoresTotalvalue);
-            writer.WriteLong(nameof(Numbermonths), Numbermonths);
-            writer.WriteLong(nameof(Ppweek), Ppweek);
-            writer.WriteDouble(nameof(ProjStoresTotalvalue), ProjStoresTotalvalue);
-            writer.WriteDouble(nameof(TotindProjStoresTotalvalue), TotindProjStoresTotalvalue);
-            writer.WriteDouble(nameof(FactorsTotalvalue), FactorsTotalvalue);
-            writer.WriteString(nameof(StoreWeight), StoreWeight);
+            writer.WriteLong("ppmonth", Ppmonth);
+            writer.WriteLong("distributor", Distributor);
+            writer.WriteString("storeid", Storeid);
+            writer.WriteString("postalcode", Postalcode);
+            writer.WriteString("outletstoreid", Outletstoreid);
+            writer.WriteLong("dma", Dma);
+            writer.WriteLong("year", Year);
+            writer.WriteLong("yearhalf", Yearhalf);
+            writer.WriteLong("yearqtr", Yearqtr);
+            writer.WriteLong("yearmonth", Yearmonth);
+            writer.WriteLong("outletfamily", Outletfamily);
+            writer.WriteLong("channel", Channel);
+            writer.WriteLong("superchannel", Superchannel);
+            writer.WriteLong("retailerregion", Retailerregion);
+            writer.WriteLong("subchannel", Subchannel);
+            writer.WriteLong("outlet", Outlet);
+            writer.WriteLong("state", State);
+            writer.WriteLong("censusdivisionusa", Censusdivisionusa);
+            writer.WriteLong("censusregionusa", Censusregionusa);
+            writer.WriteDouble("totind_stores_totalvalue", TotindStoresTotalvalue);
+            writer.WriteDouble("stores_totalvalue", StoresTotalvalue);
+            writer.WriteLong("numbermonths", Numbermonths);
+            writer.WriteLong("ppweek", Ppweek);
+            writer.WriteDouble("proj_stores_totalvalue", ProjStoresTotalvalue);
+            writer.WriteDouble("totind_proj_stores_totalvalue", TotindProjStoresTotalvalue);
+            writer.WriteDouble("factors_totalvalue", FactorsTotalvalue);
+            writer.WriteString("store_weight", StoreWeight);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Ppmonth = reader.ReadLong(nameof(Ppmonth));
-            Distributor = reader.ReadLong(nameof(Distributor));
-            Storeid = reader.ReadString(nameof(Storeid));
-            Postalcode = reader.ReadString(nameof(Postalcode));
-            Outletstoreid = reader.ReadString(nameof(Outletstoreid));
-            Dma = reader.ReadLong(nameof(Dma));
-            Year = reader.ReadLong(nameof(Year));
-            Yearhalf = reader.ReadLong(nameof(Yearhalf));
-            Yearqtr = reader.ReadLong(nameof(Yearqtr));
-            Yearmonth = reader.ReadLong(nameof(Yearmonth));
-            Outletfamily = reader.ReadLong(nameof(Outletfamily));
-            Channel = reader.ReadLong(nameof(Channel));
-            Superchannel = reader.ReadLong(nameof(Superchannel));
-            Retailerregion = reader.ReadLong(nameof(Retailerregion));
-            Subchannel = reader.ReadLong(nameof(Subchannel));
-            Outlet = reader.ReadLong(nameof(Outlet));
-            State = reader.ReadLong(nameof(State));
-            Censusdivisionusa = reader.ReadLong(nameof(Censusdivisionusa));
-            Censusregionusa = reader.ReadLong(nameof(Censusregionusa));
-            TotindStoresTotalvalue = reader.ReadDouble(nameof(TotindStoresTotalvalue));
-            StoresTotalvalue = reader.ReadDouble(nameof(StoresTotalvalue));
-            Numbermonths = reader.ReadLong(nameof(Numbermonths));
-            Ppweek = reader.ReadLong(nameof(Ppweek));
-            ProjStoresTotalvalue = reader.ReadDouble(nameof(ProjStoresTotalvalue));
-            TotindProjStoresTotalvalue = reader.ReadDouble(nameof(TotindProjStoresTotalvalue));
-            FactorsTotalvalue = reader.ReadDouble(nameof(FactorsTotalvalue));
-            StoreWeight = reader.ReadString(nameof(StoreWeight));
+            Ppmonth = reader.ReadLong("ppmonth");
+            Distributor = reader.ReadLong("distributor");
+            Storeid = reader.ReadString("storeid");
+            Postalcode = reader.ReadString("postalcode");
+            Outletstoreid = reader.ReadString("outletstoreid");
+            Dma = reader.ReadLong("dma");
+            Year = reader.ReadLong("year");
+            Yearhalf = reader.ReadLong("yearhalf");
+            Yearqtr = reader.ReadLong("yearqtr");
+            Yearmonth = reader.ReadLong("yearmonth");
+            Outletfamily = reader.ReadLong("outletfamily");
+            Channel = reader.ReadLong("channel");
+            Superchannel = reader.ReadLong("superchannel");
+            Retailerregion = reader.ReadLong("retailerregion");
+            Subchannel = reader.ReadLong("subchannel");
+            Outlet = reader.ReadLong("outlet");
+            State = reader.ReadLong("state");
+            Censusdivisionusa = reader.ReadLong("censusdivisionusa");
+            Censusregionusa = reader.ReadLong("censusregionusa");
+            TotindStoresTotalvalue = reader.ReadDouble("totind_stores_totalvalue");
+            StoresTotalvalue = reader.ReadDouble("stores_totalvalue");
+            Numbermonths = reader.ReadLong("numbermonths");
+            Ppweek = reader.ReadLong("ppweek");
+            ProjStoresTotalvalue = reader.ReadDouble("proj_stores_totalvalue");
+            TotindProjStoresTotalvalue = reader.ReadDouble("totind_proj_stores_totalvalue");
+            FactorsTotalvalue = reader.ReadDouble("factors_totalvalue");
+            StoreWeight = reader.ReadString("store_weight");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

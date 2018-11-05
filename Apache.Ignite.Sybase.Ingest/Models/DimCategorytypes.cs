@@ -14,18 +14,18 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Categorytype), Categorytype);
-            writer.WriteString(nameof(CategorytypeDesc), CategorytypeDesc);
-            writer.WriteLong(nameof(Subclass), Subclass);
-            writer.WriteString(nameof(SubclassDesc), SubclassDesc);
+            writer.WriteLong("categorytype", Categorytype);
+            writer.WriteString("categorytype_desc", CategorytypeDesc);
+            writer.WriteLong("subclass", Subclass);
+            writer.WriteString("subclass_desc", SubclassDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Categorytype = reader.ReadLong(nameof(Categorytype));
-            CategorytypeDesc = reader.ReadString(nameof(CategorytypeDesc));
-            Subclass = reader.ReadLong(nameof(Subclass));
-            SubclassDesc = reader.ReadString(nameof(SubclassDesc));
+            Categorytype = reader.ReadLong("categorytype");
+            CategorytypeDesc = reader.ReadString("categorytype_desc");
+            Subclass = reader.ReadLong("subclass");
+            SubclassDesc = reader.ReadString("subclass_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

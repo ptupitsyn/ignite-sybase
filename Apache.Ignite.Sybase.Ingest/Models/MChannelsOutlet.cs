@@ -20,30 +20,30 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Outlet), Outlet);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Displayorder), Displayorder);
-            writer.WriteString(nameof(Name), Name);
-            writer.WriteString(nameof(Shortname), Shortname);
-            writer.WriteDouble(nameof(Startrange), Startrange);
-            writer.WriteDouble(nameof(Endrange), Endrange);
-            writer.WriteLong(nameof(Subchannel), Subchannel);
-            writer.WriteLong(nameof(Channel), Channel);
-            writer.WriteLong(nameof(Superchannel), Superchannel);
+            writer.WriteLong("outlet", Outlet);
+            writer.WriteString("description", Description);
+            writer.WriteLong("displayorder", Displayorder);
+            writer.WriteString("name", Name);
+            writer.WriteString("shortname", Shortname);
+            writer.WriteDouble("startrange", Startrange);
+            writer.WriteDouble("endrange", Endrange);
+            writer.WriteLong("subchannel", Subchannel);
+            writer.WriteLong("channel", Channel);
+            writer.WriteLong("superchannel", Superchannel);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Outlet = reader.ReadLong(nameof(Outlet));
-            Description = reader.ReadString(nameof(Description));
-            Displayorder = reader.ReadLong(nameof(Displayorder));
-            Name = reader.ReadString(nameof(Name));
-            Shortname = reader.ReadString(nameof(Shortname));
-            Startrange = reader.ReadDouble(nameof(Startrange));
-            Endrange = reader.ReadDouble(nameof(Endrange));
-            Subchannel = reader.ReadLong(nameof(Subchannel));
-            Channel = reader.ReadLong(nameof(Channel));
-            Superchannel = reader.ReadLong(nameof(Superchannel));
+            Outlet = reader.ReadLong("outlet");
+            Description = reader.ReadString("description");
+            Displayorder = reader.ReadLong("displayorder");
+            Name = reader.ReadString("name");
+            Shortname = reader.ReadString("shortname");
+            Startrange = reader.ReadDouble("startrange");
+            Endrange = reader.ReadDouble("endrange");
+            Subchannel = reader.ReadLong("subchannel");
+            Channel = reader.ReadLong("channel");
+            Superchannel = reader.ReadLong("superchannel");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

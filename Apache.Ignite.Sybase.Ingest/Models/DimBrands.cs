@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Brand), Brand);
-            writer.WriteString(nameof(BrandDesc), BrandDesc);
-            writer.WriteLong(nameof(Brandfamily), Brandfamily);
-            writer.WriteString(nameof(BrandfamilyDesc), BrandfamilyDesc);
-            writer.WriteLong(nameof(Brandtype), Brandtype);
-            writer.WriteString(nameof(BrandtypeDesc), BrandtypeDesc);
-            writer.WriteLong(nameof(Itemnumber), Itemnumber);
-            writer.WriteString(nameof(ItemnumberDesc), ItemnumberDesc);
+            writer.WriteLong("brand", Brand);
+            writer.WriteString("brand_desc", BrandDesc);
+            writer.WriteLong("brandfamily", Brandfamily);
+            writer.WriteString("brandfamily_desc", BrandfamilyDesc);
+            writer.WriteLong("brandtype", Brandtype);
+            writer.WriteString("brandtype_desc", BrandtypeDesc);
+            writer.WriteLong("itemnumber", Itemnumber);
+            writer.WriteString("itemnumber_desc", ItemnumberDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Brand = reader.ReadLong(nameof(Brand));
-            BrandDesc = reader.ReadString(nameof(BrandDesc));
-            Brandfamily = reader.ReadLong(nameof(Brandfamily));
-            BrandfamilyDesc = reader.ReadString(nameof(BrandfamilyDesc));
-            Brandtype = reader.ReadLong(nameof(Brandtype));
-            BrandtypeDesc = reader.ReadString(nameof(BrandtypeDesc));
-            Itemnumber = reader.ReadLong(nameof(Itemnumber));
-            ItemnumberDesc = reader.ReadString(nameof(ItemnumberDesc));
+            Brand = reader.ReadLong("brand");
+            BrandDesc = reader.ReadString("brand_desc");
+            Brandfamily = reader.ReadLong("brandfamily");
+            BrandfamilyDesc = reader.ReadString("brandfamily_desc");
+            Brandtype = reader.ReadLong("brandtype");
+            BrandtypeDesc = reader.ReadString("brandtype_desc");
+            Itemnumber = reader.ReadLong("itemnumber");
+            ItemnumberDesc = reader.ReadString("itemnumber_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

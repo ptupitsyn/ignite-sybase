@@ -18,26 +18,26 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Channel), Channel);
-            writer.WriteString(nameof(ChannelDesc), ChannelDesc);
-            writer.WriteLong(nameof(Outlet), Outlet);
-            writer.WriteString(nameof(OutletDesc), OutletDesc);
-            writer.WriteLong(nameof(Subchannel), Subchannel);
-            writer.WriteString(nameof(SubchannelDesc), SubchannelDesc);
-            writer.WriteLong(nameof(Superchannel), Superchannel);
-            writer.WriteString(nameof(SuperchannelDesc), SuperchannelDesc);
+            writer.WriteLong("channel", Channel);
+            writer.WriteString("channel_desc", ChannelDesc);
+            writer.WriteLong("outlet", Outlet);
+            writer.WriteString("outlet_desc", OutletDesc);
+            writer.WriteLong("subchannel", Subchannel);
+            writer.WriteString("subchannel_desc", SubchannelDesc);
+            writer.WriteLong("superchannel", Superchannel);
+            writer.WriteString("superchannel_desc", SuperchannelDesc);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Channel = reader.ReadLong(nameof(Channel));
-            ChannelDesc = reader.ReadString(nameof(ChannelDesc));
-            Outlet = reader.ReadLong(nameof(Outlet));
-            OutletDesc = reader.ReadString(nameof(OutletDesc));
-            Subchannel = reader.ReadLong(nameof(Subchannel));
-            SubchannelDesc = reader.ReadString(nameof(SubchannelDesc));
-            Superchannel = reader.ReadLong(nameof(Superchannel));
-            SuperchannelDesc = reader.ReadString(nameof(SuperchannelDesc));
+            Channel = reader.ReadLong("channel");
+            ChannelDesc = reader.ReadString("channel_desc");
+            Outlet = reader.ReadLong("outlet");
+            OutletDesc = reader.ReadString("outlet_desc");
+            Subchannel = reader.ReadLong("subchannel");
+            SubchannelDesc = reader.ReadString("subchannel_desc");
+            Superchannel = reader.ReadLong("superchannel");
+            SuperchannelDesc = reader.ReadString("superchannel_desc");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

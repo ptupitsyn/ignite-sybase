@@ -17,24 +17,24 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Ppweek), Ppweek);
-            writer.WriteLong(nameof(Yearweek), Yearweek);
-            writer.WriteLong(nameof(Yearmonth), Yearmonth);
-            writer.WriteLong(nameof(Year), Year);
-            writer.WriteString(nameof(Description), Description);
-            writer.WriteLong(nameof(Endofmonth), Endofmonth);
-            writer.WriteLong(nameof(Ppmonth), Ppmonth);
+            writer.WriteLong("ppweek", Ppweek);
+            writer.WriteLong("yearweek", Yearweek);
+            writer.WriteLong("yearmonth", Yearmonth);
+            writer.WriteLong("year", Year);
+            writer.WriteString("description", Description);
+            writer.WriteLong("endofmonth", Endofmonth);
+            writer.WriteLong("ppmonth", Ppmonth);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Ppweek = reader.ReadLong(nameof(Ppweek));
-            Yearweek = reader.ReadLong(nameof(Yearweek));
-            Yearmonth = reader.ReadLong(nameof(Yearmonth));
-            Year = reader.ReadLong(nameof(Year));
-            Description = reader.ReadString(nameof(Description));
-            Endofmonth = reader.ReadLong(nameof(Endofmonth));
-            Ppmonth = reader.ReadLong(nameof(Ppmonth));
+            Ppweek = reader.ReadLong("ppweek");
+            Yearweek = reader.ReadLong("yearweek");
+            Yearmonth = reader.ReadLong("yearmonth");
+            Year = reader.ReadLong("year");
+            Description = reader.ReadString("description");
+            Endofmonth = reader.ReadLong("endofmonth");
+            Ppmonth = reader.ReadLong("ppmonth");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

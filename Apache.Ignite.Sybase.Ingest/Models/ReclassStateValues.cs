@@ -16,22 +16,22 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteString(nameof(Codeset), Codeset);
-            writer.WriteString(nameof(CodesetName), CodesetName);
-            writer.WriteLong(nameof(Code), Code);
-            writer.WriteString(nameof(CodeName), CodeName);
-            writer.WriteLong(nameof(State), State);
-            writer.WriteString(nameof(Sbname), Sbname);
+            writer.WriteString("codeset", Codeset);
+            writer.WriteString("codeset_name", CodesetName);
+            writer.WriteLong("code", Code);
+            writer.WriteString("code_name", CodeName);
+            writer.WriteLong("state", State);
+            writer.WriteString("sbname", Sbname);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Codeset = reader.ReadString(nameof(Codeset));
-            CodesetName = reader.ReadString(nameof(CodesetName));
-            Code = reader.ReadLong(nameof(Code));
-            CodeName = reader.ReadString(nameof(CodeName));
-            State = reader.ReadLong(nameof(State));
-            Sbname = reader.ReadString(nameof(Sbname));
+            Codeset = reader.ReadString("codeset");
+            CodesetName = reader.ReadString("codeset_name");
+            Code = reader.ReadLong("code");
+            CodeName = reader.ReadString("code_name");
+            State = reader.ReadLong("state");
+            Sbname = reader.ReadString("sbname");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)

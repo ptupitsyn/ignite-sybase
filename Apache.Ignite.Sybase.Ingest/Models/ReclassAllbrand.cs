@@ -12,14 +12,14 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         public void WriteBinary(IBinaryWriter writer)
         {
-            writer.WriteLong(nameof(Allbrand), Allbrand);
-            writer.WriteLong(nameof(Adjwcensusbrands), Adjwcensusbrands);
+            writer.WriteLong("allbrand", Allbrand);
+            writer.WriteLong("adjwcensusbrands", Adjwcensusbrands);
         }
 
         public void ReadBinary(IBinaryReader reader)
         {
-            Allbrand = reader.ReadLong(nameof(Allbrand));
-            Adjwcensusbrands = reader.ReadLong(nameof(Adjwcensusbrands));
+            Allbrand = reader.ReadLong("allbrand");
+            Adjwcensusbrands = reader.ReadLong("adjwcensusbrands");
         }
 
         public unsafe void ReadFromRecordBuffer(byte[] buffer)
