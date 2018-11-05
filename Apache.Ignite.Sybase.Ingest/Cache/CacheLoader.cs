@@ -173,7 +173,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 {
                     var sync = new object();
 
-                    var decoderTasks = Enumerable.Range(1, 2).Select(_ => Task.Factory.StartNew(() =>
+                    var decoderTasks = Enumerable.Range(1, 3).Select(_ => Task.Factory.StartNew(() =>
                     {
                         var buffer = new byte[desc.Length];  // One buffer per thread.
 

@@ -26,9 +26,9 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         [QuerySqlField(Name = "wearersize")] public long Wearersize { get; set; }
         [QuerySqlField(Name = "retailerregion")] public long Retailerregion { get; set; }
         [QuerySqlField(Name = "wearersegment")] public long Wearersegment { get; set; }
-        [QuerySqlField(Name = "wearergender", IsIndexed = true)] public long Wearergender { get; set; }
+        [QuerySqlField(Name = "wearergender", IsIndexed = true, IndexGroups = new[]{ "idx_wearergender", "idx_supercategory_wearergender"})] public long Wearergender { get; set; }
         [QuerySqlField(Name = "superchannel")] public long Superchannel { get; set; }
-        [QuerySqlField(Name = "supercategory", IsIndexed = true)] public long Supercategory { get; set; }
+        [QuerySqlField(Name = "supercategory", IsIndexed = true, IndexGroups = new[]{ "idx_supercategory", "idx_supercategory_wearergender"})] public long Supercategory { get; set; }
         [QuerySqlField(Name = "subclass", IsIndexed = true)] public long Subclass { get; set; }
         [QuerySqlField(Name = "outletfamily")] public long Outletfamily { get; set; }
         [QuerySqlField(Name = "outlet")] public long Outlet { get; set; }
