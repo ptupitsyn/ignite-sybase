@@ -7,7 +7,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 {
     public class AttrPositemsAttributes : IBinarizable, ICanReadFromRecordBuffer
     {
-        [QuerySqlField(Name = "itemid")] public long Itemid { get; set; }
+        [QuerySqlField(Name = "itemid", IsIndexed = true)] public long Itemid { get; set; }
         [QuerySqlField(Name = "supercategory")] public long Supercategory { get; set; }
         [QuerySqlField(Name = "subclass")] public long Subclass { get; set; }
         [QuerySqlField(Name = "class")] public long Class { get; set; }

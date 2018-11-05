@@ -10,7 +10,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         [QuerySqlField(Name = "ppweek")] public long Ppweek { get; set; }
         [QuerySqlField(Name = "ppmonth", IsIndexed = true)] public long Ppmonth { get; set; }
         [QuerySqlField(Name = "country")] public long Country { get; set; }
-        [QuerySqlField(Name = "itemid")] public long Itemid { get; set; }
+        [QuerySqlField(Name = "itemid", IsIndexed = true)] public long Itemid { get; set; }
         [QuerySqlField(Name = "loadid")] public long Loadid { get; set; }
         [QuerySqlField(Name = "pos_id")] public long PosId { get; set; }
         [QuerySqlField(Name = "rid")] public long Rid { get; set; }
