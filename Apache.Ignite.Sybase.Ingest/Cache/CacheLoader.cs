@@ -33,10 +33,15 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
                 .OrderBy(d => d.InFile)
-                // .Where(d => d.TableName.Trim().ToLower() == "fact_data_item_mon")
+                .Where(d => d.TableName.EndsWith("fact_data_item_mon"))
                 .ToArray();
 
-            log.Info($"Found {recordDescriptors.Length} record descriptors. Starting Ignite...");
+            var descsAndFiles = recordDescriptors
+                .SelectMany(d => d.GetDataFilePaths(dir).Select(p => (Desc: d, Path: p)))
+                .OrderByDescending(d => new FileInfo(d.Path).Length)
+                .ToArray();
+
+            log.Info($"Found {recordDescriptors.Length} record descriptors, {descsAndFiles.Length} data files.");
 
             var cfg = GetIgniteConfiguration();
             using (var ignite = Ignition.Start(cfg))
@@ -50,11 +55,6 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 var sw = Stopwatch.StartNew();
                 _loadStartTime = DateTime.Now;
                 var dataFiles = new ConcurrentBag<DataFileInfo>();
-
-                var descsAndFiles = recordDescriptors
-                    .SelectMany(d => d.GetDataFilePaths(dir).Select(p => (Desc: d, Path: p)))
-                    .OrderByDescending(d => new FileInfo(d.Path).Length)
-                    .ToArray();
 
                 // ReSharper disable once AccessToDisposedClosure (not an issue).
                 Parallel.ForEach(
