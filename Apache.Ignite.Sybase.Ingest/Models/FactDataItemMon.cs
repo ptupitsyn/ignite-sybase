@@ -8,7 +8,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     public class FactDataItemMon : IBinarizable, ICanReadFromRecordBuffer
     {
         [QuerySqlField(Name = "ppweek")] public long Ppweek { get; set; }
-        [QuerySqlField(Name = "ppmonth", IsIndexed = true)] public long Ppmonth { get; set; }
+        [QuerySqlField(Name = "ppmonth")] public long Ppmonth { get; set; }
         [QuerySqlField(Name = "country")] public long Country { get; set; }
         [QuerySqlField(Name = "itemid", IsIndexed = true)] public long Itemid { get; set; }
         [QuerySqlField(Name = "loadid")] public long Loadid { get; set; }
@@ -29,7 +29,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
         [QuerySqlField(Name = "wearergender", IsIndexed = true, IndexGroups = new[]{ "idx_wearergender", "idx_supercategory_wearergender"})] public long Wearergender { get; set; }
         [QuerySqlField(Name = "superchannel")] public long Superchannel { get; set; }
         [QuerySqlField(Name = "supercategory", IsIndexed = true, IndexGroups = new[]{ "idx_supercategory", "idx_supercategory_wearergender"})] public long Supercategory { get; set; }
-        [QuerySqlField(Name = "subclass", IsIndexed = true)] public long Subclass { get; set; }
+        [QuerySqlField(Name = "subclass")] public long Subclass { get; set; }
         [QuerySqlField(Name = "outletfamily")] public long Outletfamily { get; set; }
         [QuerySqlField(Name = "outlet")] public long Outlet { get; set; }
         [QuerySqlField(Name = "subchannel")] public long Subchannel { get; set; }
