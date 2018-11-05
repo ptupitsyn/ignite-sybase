@@ -39,7 +39,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
                 .OrderBy(d => d.InFile)
-                .Where(d => d.TableName.EndsWith("fact_data_item_mon"))
+                // .Where(d => d.TableName.EndsWith("fact_data_item_mon"))
                 .ToArray();
 
             var descsAndFiles = recordDescriptors
@@ -53,7 +53,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             using (var ignite = Ignition.Start(cfg))
             {
                 // log.Info("Ignite started, deleting caches...");
-                // DeleteCaches(recordDescriptors, ignite);
+                DeleteCaches(recordDescriptors, ignite);
 
                 log.Info("Ignite started, creating caches...");
                 CreateCaches(recordDescriptors, ignite);
@@ -252,6 +252,10 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
         private static ICache<long, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
         {
+            var cacheMode = ReplicatedTables.Contains(desc.TableName)
+                ? CacheMode.Replicated
+                : CacheMode.Partitioned;
+
             var cacheCfg = new CacheConfiguration
             {
                 Name = desc.TableName,
@@ -265,10 +269,8 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     }
                 },
                 EnableStatistics = true,
-                QueryParallelism = 8,
-                CacheMode = ReplicatedTables.Contains(desc.TableName)
-                    ? CacheMode.Replicated
-                    : CacheMode.Partitioned
+                // QueryParallelism = cacheMode == CacheMode.Partitioned ? 8 : 1,
+                CacheMode = cacheMode
             };
 
             return ignite.GetOrCreateCache<long, T>(cacheCfg);
