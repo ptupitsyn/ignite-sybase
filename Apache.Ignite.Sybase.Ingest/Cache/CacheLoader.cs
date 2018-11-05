@@ -64,22 +64,28 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
                 var elapsed = sw.Elapsed;
 
-                var cacheNames = ignite.GetCacheNames();
-                var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
-
-                var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
-                log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
-                log.Info("======= Loading complete ========");
-                log.Info($" * {cacheNames.Count} caches");
-                log.Info($" * {totalItems} cache entries");
-                log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
-
-                var totalGzippedSizeGb = dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
-                var totalSizeGb = dataFiles.Sum(f => f.Size)  / 1024 / 1024 / 1024;
-                log.Info($" * {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw");
-                log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
-                log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
+                LogStats(ignite, dataFiles, elapsed);
             }
+        }
+
+        private static void LogStats(IIgnite ignite, ConcurrentBag<DataFileInfo> dataFiles, TimeSpan elapsed)
+        {
+            var log = LogManager.GetLogger(nameof(LogStats));
+            var cacheNames = ignite.GetCacheNames();
+            var totalItems = cacheNames.Sum(n => ignite.GetCache<int, int>(n).GetSize());
+
+            var dataFilesJson = JsonConvert.SerializeObject(dataFiles.ToArray());
+            log.Info($" * {dataFiles.Count} data files loaded: {dataFilesJson}");
+            log.Info("======= Loading complete ========");
+            log.Info($" * {cacheNames.Count} caches");
+            log.Info($" * {totalItems} cache entries");
+            log.Info($" * {elapsed} elapsed, {totalItems / elapsed.TotalSeconds} entries per second.");
+
+            var totalGzippedSizeGb = dataFiles.Sum(f => f.CompressedSize) / 1024 / 1024 / 1024;
+            var totalSizeGb = dataFiles.Sum(f => f.Size) / 1024 / 1024 / 1024;
+            log.Info($" * {totalGzippedSizeGb} GB gzipped, {totalSizeGb} raw");
+            log.Info($" * {(double) totalGzippedSizeGb / elapsed.TotalSeconds} GB per second gzipped.");
+            log.Info($" * {(double) totalSizeGb / elapsed.TotalSeconds} GB per second raw.");
         }
 
         private static void CreateCaches(RecordDescriptor[] recordDescriptors, IIgnite ignite)
