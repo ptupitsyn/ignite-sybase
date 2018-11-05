@@ -33,7 +33,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             var recordDescriptors = CtrlGenParser.ParseAll(dir)
                 .OrderBy(d => d.InFile)
-                .Where(d => d.TableName.Trim().ToLower() == "fact_data_item_mon")
+                // .Where(d => d.TableName.Trim().ToLower() == "fact_data_item_mon")
                 .ToArray();
 
             log.Info($"Found {recordDescriptors.Length} record descriptors. Starting Ignite...");
