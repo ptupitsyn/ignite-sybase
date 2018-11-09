@@ -5,9 +5,9 @@ using Apache.Ignite.Core.Cache.Configuration;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    public class AttrPositemsAttributes : IBinarizable, ICanReadFromRecordBuffer
+    public class AttrPositemsAttributes : IBinarizable, ICanReadFromRecordBuffer, IItemid
     {
-        [QuerySqlField(Name = "itemid", IsIndexed = true)] public long Itemid { get; set; }
+        public long Itemid { get; set; }
         [QuerySqlField(Name = "supercategory")] public long Supercategory { get; set; }
         [QuerySqlField(Name = "subclass")] public long Subclass { get; set; }
         [QuerySqlField(Name = "class")] public long Class { get; set; }
