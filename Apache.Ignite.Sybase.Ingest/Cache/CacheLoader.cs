@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Apache.Ignite.Core;
 using Apache.Ignite.Core.Binary;
 using Apache.Ignite.Core.Cache;
+using Apache.Ignite.Core.Cache.Affinity;
 using Apache.Ignite.Core.Cache.Configuration;
 using Apache.Ignite.Core.Discovery.Tcp;
 using Apache.Ignite.Core.Discovery.Tcp.Static;
@@ -27,7 +28,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
     {
         private static readonly HashSet<string> ReplicatedTables = new HashSet<string>(new[]
         {
-            "attr_positems_attributes"
+            ""
         });
 
         private static DateTime _loadStartTime = DateTime.Now;
@@ -162,12 +163,12 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
 
             try
             {
-                var cache = ignite.GetCache<long, T>(desc.TableName);
+                var cache = ignite.GetCache<object, T>(desc.TableName);
 
                 log.Info($"Starting {dataFilePath}...");
                 var entryCount = 0;
 
-                using (var streamer = ignite.GetDataStreamer<long, T>(cache.Name))
+                using (var streamer = ignite.GetDataStreamer<ItemidAffinityKey, T>(cache.Name))
                 using (var reader = desc.GetBinaryRecordReader(dataFilePath))
                 using (var itemQueue = new BlockingCollection<T>(2000))
                 {
@@ -204,7 +205,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                         if (itemQueue.TryTake(out var item))
                         {
                             entryCount++;
-                            streamer.AddData(Interlocked.Increment(ref _key), item);
+                            streamer.AddData(new ItemidAffinityKey() { Key = Interlocked.Increment(ref _key), Itemid = ((IItemid)(object)item).Itemid }, item);
                         }
                     }
                 }
@@ -250,7 +251,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
             genericMethod.Invoke(null, new object[] {ignite, desc});
         }
 
-        private static ICache<long, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
+        private static ICache<ItemidAffinityKey, T> CreateCacheGeneric<T>(IIgnite ignite, RecordDescriptor desc)
         {
             var cacheMode = ReplicatedTables.Contains(desc.TableName)
                 ? CacheMode.Replicated
@@ -264,7 +265,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                     new QueryEntity
                     {
                         TableName = desc.TableName,
-                        KeyType = typeof(long),
+                        KeyType = typeof(ItemidAffinityKey),
                         ValueType = typeof(T)
                     }
                 },
@@ -273,7 +274,7 @@ namespace Apache.Ignite.Sybase.Ingest.Cache
                 CacheMode = cacheMode
             };
 
-            return ignite.GetOrCreateCache<long, T>(cacheCfg);
+            return ignite.GetOrCreateCache<ItemidAffinityKey, T>(cacheCfg);
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]

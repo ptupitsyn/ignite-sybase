@@ -5,12 +5,12 @@ using Apache.Ignite.Core.Cache.Configuration;
 
 namespace Apache.Ignite.Sybase.Ingest.Cache
 {
-    public class FactDataItemMon : IBinarizable, ICanReadFromRecordBuffer
+    public class FactDataItemMon : IBinarizable, ICanReadFromRecordBuffer, IItemid
     {
         [QuerySqlField(Name = "ppweek")] public long Ppweek { get; set; }
         [QuerySqlField(Name = "ppmonth")] public long Ppmonth { get; set; }
         [QuerySqlField(Name = "country")] public long Country { get; set; }
-        [QuerySqlField(Name = "itemid", IsIndexed = true)] public long Itemid { get; set; }
+        public long Itemid { get; set; }
         [QuerySqlField(Name = "loadid")] public long Loadid { get; set; }
         [QuerySqlField(Name = "pos_id")] public long PosId { get; set; }
         [QuerySqlField(Name = "rid")] public long Rid { get; set; }
